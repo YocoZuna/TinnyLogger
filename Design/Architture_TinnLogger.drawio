@@ -1,0 +1,70 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" version="29.6.1">
+  <diagram name="Strona-1" id="qGbAWtR3ut5jcIcGbMIJ">
+    <mxGraphModel dx="1097" dy="591" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="BLJPcZAxe_u_v1oqux5S-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="STM32L432" vertex="1">
+          <mxGeometry height="180" width="230" x="320" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="BLJPcZAxe_u_v1oqux5S-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="SD Card" vertex="1">
+          <mxGeometry height="60" width="120" x="100" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="BLJPcZAxe_u_v1oqux5S-3" edge="1" parent="1" source="BLJPcZAxe_u_v1oqux5S-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.001;entryY=0.338;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=classic;startFill=1;" target="BLJPcZAxe_u_v1oqux5S-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BLJPcZAxe_u_v1oqux5S-5" connectable="0" parent="BLJPcZAxe_u_v1oqux5S-3" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="SPI" vertex="1">
+          <mxGeometry relative="1" x="-0.1289" y="2" as="geometry">
+            <mxPoint y="-8" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="BLJPcZAxe_u_v1oqux5S-8" edge="1" parent="1" source="BLJPcZAxe_u_v1oqux5S-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.876;entryY=1.012;entryDx=0;entryDy=0;entryPerimeter=0;" target="BLJPcZAxe_u_v1oqux5S-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="500" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="BLJPcZAxe_u_v1oqux5S-9" connectable="0" parent="BLJPcZAxe_u_v1oqux5S-8" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="NVIC/EXTI" vertex="1">
+          <mxGeometry relative="1" x="-0.0344" y="1" as="geometry">
+            <mxPoint x="-34" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="BLJPcZAxe_u_v1oqux5S-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="IRQ" vertex="1">
+          <mxGeometry height="60" width="120" x="460" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="BLJPcZAxe_u_v1oqux5S-16" edge="1" parent="1" source="BLJPcZAxe_u_v1oqux5S-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="BLJPcZAxe_u_v1oqux5S-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BLJPcZAxe_u_v1oqux5S-17" connectable="0" parent="BLJPcZAxe_u_v1oqux5S-16" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="ADC/DMA" vertex="1">
+          <mxGeometry relative="1" x="0.0158" y="-2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="BLJPcZAxe_u_v1oqux5S-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="ADC Inputs" vertex="1">
+          <mxGeometry height="60" width="120" x="100" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="BLJPcZAxe_u_v1oqux5S-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="I2C" vertex="1">
+          <mxGeometry height="60" width="120" x="100" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="BLJPcZAxe_u_v1oqux5S-14" edge="1" parent="1" source="BLJPcZAxe_u_v1oqux5S-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.001;entryY=0.834;entryDx=0;entryDy=0;entryPerimeter=0;" target="BLJPcZAxe_u_v1oqux5S-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BLJPcZAxe_u_v1oqux5S-15" connectable="0" parent="BLJPcZAxe_u_v1oqux5S-14" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="I2C/DMA" vertex="1">
+          <mxGeometry relative="1" x="-0.5954" y="1" as="geometry">
+            <mxPoint y="-9" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="BLJPcZAxe_u_v1oqux5S-19" edge="1" parent="1" source="BLJPcZAxe_u_v1oqux5S-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" target="BLJPcZAxe_u_v1oqux5S-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BLJPcZAxe_u_v1oqux5S-20" connectable="0" parent="BLJPcZAxe_u_v1oqux5S-19" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="SPI/DMA" vertex="1">
+          <mxGeometry relative="1" x="-0.3923" y="2" as="geometry">
+            <mxPoint x="2" y="-16" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="BLJPcZAxe_u_v1oqux5S-18" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="SPI" vertex="1">
+          <mxGeometry height="60" width="120" x="320" y="490" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
