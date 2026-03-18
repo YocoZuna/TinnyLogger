@@ -24,7 +24,8 @@
 project("TinnyLogger")
 enable_language(C CXX ASM)
 message("Build type: " ${CMAKE_BUILD_TYPE})
-
+add_compile_definitions(-DSTM32L432xx)
+add_compile_definitions(-DUSE_FULL_LL_DRIVER)
 # Setup compiler settings
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -41,13 +42,12 @@ set(cpu_PARAMS
 )
 
 file(GLOB HAL_SRCS
-    ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32L4xx-HAL/Src/*.c
-
+    ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32L4xx_HAL/Src/*.c
 )
 # Sources
 set(sources_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/Src/main.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/Src/stm32l4xx_it.c
+    #${CMAKE_CURRENT_SOURCE_DIR}/Src/stm32l4xx_it.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/sysmem.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/syscall.c
     ${HAL_SRCS}
@@ -57,8 +57,8 @@ set(sources_SRCS
 set(include_DIRS
 	${CMAKE_CURRENT_SOURCE_DIR}/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Include
-    ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Device/ST/STM32L4xx/Include
-    ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32L4xx-HAL/Include
+    ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Device
+    ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32L4xx_HAL/Inc
 )
 
 # Include directories for each compiler
