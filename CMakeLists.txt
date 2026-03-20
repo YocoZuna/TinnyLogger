@@ -44,6 +44,9 @@ set(cpu_PARAMS
 file(GLOB HAL_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32L4xx_HAL/Src/*.c
 )
+file(GLOB FATFS_SRCS
+    ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/FatFS/source/*.c
+)
 # Sources
 set(sources_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/Src/main.c
@@ -59,6 +62,7 @@ set(include_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Include
     ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Device
     ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32L4xx_HAL/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/FatFS/source
 )
 
 # Include directories for each compiler
