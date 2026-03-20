@@ -1,0 +1,38 @@
+This is deleivery contract between client(Me) and company that will deliver solution (Me)
+
+Logger v0.0.1
+
+Requirements:
+- read data from one sensor
+- store data on SD card (text file, e.g. CSV)
+- system runs without crashes
+- basic code separation (sensor / storage / main)
+
+DONE:
+- data is correctly saved and readable from SD card
+
+Logger v0.0.2
+
+Requirements:
+- refactor to C++
+- separate business logic from hardware (interfaces)
+- introduce buffer (optional)
+- improve error handling
+
+Logger v0.0.3
+
+Requirements:
+- low power modes
+- support multiple sensors
+
+Logger v0.0.4
+
+Requirements:
+- design PCB (max 20mm x 20mm)
+- connectors for sensors
+- power from battery / USB
+- debug interface (SWD)
+
+
+Signed-off By 
+Dawid Żądło
