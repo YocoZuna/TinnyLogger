@@ -5,6 +5,10 @@
 #include "stm32l4xx_ll_bus.h"
 #include "stm32l4xx_ll_gpio.h"
 
+
+#define CS_PIN LL_GPIO_PIN_11
+#define CS_PORT GPIOB
+
 /*
     * @brief Initializes the SPI peripheral.
     *
@@ -71,3 +75,4 @@ void spi_select(GPIO_TypeDef* GPIOx, uint32_t Pin);
     * @param Pin: Specifies the GPIO pin number used for slave select (e.g., LL_GPIO_PIN_0).
 */
 void spi_deselect(GPIO_TypeDef* GPIOx, uint32_t Pin);
+
