@@ -8,8 +8,11 @@
 #define SD_CMD0_CRC 0x95
 #define SD_CMD8_CRC 0x87
 #define SD_DUMMY_CRC 0x01
+#define SD_DUMMY_BYTE 0xFF
 #define DUMMY_CLOCKS 76
-#define DUMMY_BYTE 0xFF
+#define CMD_SIZE 5
+
+
 
 static SPI_TypeDef *SD_SPI = NULL;
 void sd_card_init(SPI_TypeDef *SPIx);
@@ -21,26 +24,17 @@ void sd_card_init(SPI_TypeDef *SPIx);
 
     0 CMD ARGUMENT CRC END_BIT
 */
-void sd_card_send_command(uint8_t cmd, uint32_t arg);
+
 
 static inline void send_dummy_clocks(){
     uint8_t dummy_buffer[DUMMY_CLOCKS];
     for(int i = 0; i < DUMMY_CLOCKS; i++){
-        dummy_buffer[i] = DUMMY_BYTE;
+        dummy_buffer[i] = SD_DUMMY_BYTE;
     }
-    spi_tx(SD_SPI, dummy_buffer, DUMMY_CLOCKS);
+    spi_tx(SD_SPI, dummy_buffer, DUMMY_CLOCKS,1000);
 }
 
+ErrorStatus sd_card_receive_R1(uint8_t* response, uint32_t timeout);
+ErrorStatus sd_card_receive_R7_R3(uint8_t* responseBuffer,uint8_t buffer_size, uint32_t timeout);
+ErrorStatus sd_card_send_command(uint8_t cmd, uint32_t arg);
 
-//Disable optimalization, compiler can optimazie out this function
-#pragma GCC push_options
-#pragma GCC optimize ("O0")
-static inline void sd_delay(uint32_t ms){
-    
-    uint32_t delay_cycles = (4000000/1000); // Approximate delay loop, adjust as needed for timing accuracy
-    for(volatile uint32_t i = 0; i < ms * delay_cycles; i++)
-    {
-        __NOP(); // No operation, just waste time
-    }
-}
-#pragma GCC pop_options

@@ -47,15 +47,19 @@ file(GLOB HAL_SRCS
 file(GLOB FATFS_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/FatFS/source/*.c
 )
+file(GLOB PLATFORM_SRCS
+    ${CMAKE_CURRENT_SOURCE_DIR}/platform/Src/*.c
+)
 # Sources
 set(sources_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/Src/main.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/spi.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/sd_card.c
-    #${CMAKE_CURRENT_SOURCE_DIR}/Src/stm32l4xx_it.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/Src/sysmem.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/Src/syscall.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Src/stm32l4xx_it.c
+    #${CMAKE_CURRENT_SOURCE_DIR}/Src/sysmem.c
+    #${CMAKE_CURRENT_SOURCE_DIR}/Src/syscall.c
     ${HAL_SRCS}
+    ${PLATFORM_SRCS}
 )
 
 # Include directories for all compilers
@@ -65,6 +69,8 @@ set(include_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Device
     ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32L4xx_HAL/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/FatFS/source
+    ${CMAKE_CURRENT_SOURCE_DIR}/platform/Inc
+
 )
 
 # Include directories for each compiler
@@ -136,11 +142,12 @@ target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE
     ${cpu_PARAMS}
     ${compiler_OPTS}
     -fstack-usage
-    # -fcyclomatic-complexity
+    -fcyclomatic-complexity
     -Wall
     -Wextra
     -Wpedantic
     -Wno-unused-parameter
+    -fanalyzer
     $<$<COMPILE_LANGUAGE:C>: >
     $<$<COMPILE_LANGUAGE:CXX>:
 

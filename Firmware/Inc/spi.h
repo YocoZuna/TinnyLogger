@@ -4,17 +4,19 @@
 #include "stm32l4xx_ll_spi.h"
 #include "stm32l4xx_ll_bus.h"
 #include "stm32l4xx_ll_gpio.h"
-
+#include "time.h"
 
 #define CS_PIN LL_GPIO_PIN_11
-#define CS_PORT GPIOB
+#define CS_PORT GPIOA
 
 /*
     * @brief Initializes the SPI peripheral.
     *
     * @param SPIx: Pointer to the SPI peripheral.
+    * @param spi_init_struct: Pointer to a structure containing the SPI initialization parameters (e.g., mode, baud rate, data width).
+    * @return ErrorStatus indicating success or failure of the initialization.
 */
-void spi_init(SPI_TypeDef*SPIx,LL_SPI_InitTypeDef* spi_init_struct);
+ErrorStatus spi_init(SPI_TypeDef*SPIx,LL_SPI_InitTypeDef* spi_init_struct);
 /*
     * @brief Transmits and receives data over SPI. This function sends data from the tx_buffer and simultaneously receives data into the rx_buffer.
     *
@@ -22,39 +24,30 @@ void spi_init(SPI_TypeDef*SPIx,LL_SPI_InitTypeDef* spi_init_struct);
     * @param tx_buffer: Pointer to the buffer containing data to be transmitted.
     * @param rx_buffer: Pointer to the buffer where received data will be stored.
     * @param size: Number of bytes to transmit and receive.
+    * @param timeout: Timeout value for the operation.
+    * @return ErrorStatus indicating success or failure of the operation.
 */
-void spi_tx_rx(SPI_TypeDef*SPIx, uint8_t* tx_buffer, uint8_t* rx_buffer, uint16_t size);
-/*
-    * @brief Transmits  single byte over SPI.
-    *
-    * @param SPIx: Pointer to the SPI peripheral.
-    * @param byte: The byte to be transmitted.
-*/
-void spi_tx_byte(SPI_TypeDef*SPIx, uint8_t byte);
-/*
-    * @brief Receives a single byte over SPI.
-    *
-    * @param SPIx: Pointer to the SPI peripheral.
-    * @param byte: Pointer to the variable where the received byte will be stored.
-    * @return The received byte.
-*/
-uint8_t spi_rx_byte(SPI_TypeDef*SPIx, uint8_t* byte);
+ErrorStatus spi_tx_rx( SPI_TypeDef*SPIx, const uint8_t* tx_buffer, uint8_t* rx_buffer, uint16_t size, uint32_t timeout);
 /*
     * @brief Transmits data over SPI. This function sends data from the tx_buffer.
     *
     * @param SPIx: Pointer to the SPI peripheral.
     * @param tx_buffer: Pointer to the buffer containing data to be transmitted.
     * @param size: Number of bytes to transmit.
+    * @param timeout: Timeout value for the operation.
+    * @return ErrorStatus indicating success or failure of the operation.
 */
-void spi_tx(SPI_TypeDef*SPIx, uint8_t* tx_buffer, uint16_t size);
+ErrorStatus spi_tx( SPI_TypeDef*SPIx, uint8_t* tx_buffer, uint16_t size, uint32_t timeout);
 /*
     * @brief Receives data over SPI. This function receives data into the rx_buffer.
     *
     * @param SPIx: Pointer to the SPI peripheral.
     * @param rx_buffer: Pointer to the buffer where received data will be stored.
     * @param size: Number of bytes to receive.
+    * @param timeout: Timeout value for the operation.
+    * @return ErrorStatus indicating success or failure of the operation.
 */
-void spi_rx(SPI_TypeDef*SPIx, uint8_t* rx_buffer, uint16_t size);
+ErrorStatus spi_rx( SPI_TypeDef*SPIx, uint8_t* rx_buffer, uint16_t size, uint32_t timeout);
 /*
     * @brief Deinitializes the SPI peripheral.
     *
