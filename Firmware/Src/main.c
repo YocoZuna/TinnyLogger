@@ -18,6 +18,7 @@
 
 #include "stm32l4xx_ll_gpio.h"
 #include "stm32l4xx_ll_utils.h"
+#include "time.h"
 #define MOSI_PIN LL_GPIO_PIN_3
 #define MISO_PIN LL_GPIO_PIN_4
 #define SCK_PIN LL_GPIO_PIN_5
@@ -56,11 +57,13 @@ int main(void)
     LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
     LL_GPIO_SetPinPull(CS_PORT, CS_PIN, LL_GPIO_PULL_UP);
     LL_GPIO_SetPinPull(GPIOB, MISO_PIN, LL_GPIO_PULL_UP);
-    
+    timeInit();
     spi_init(SPI3, &spi);
     //spi_tx(SPI3, (uint8_t*)"Hello, SD Card!", 16);
     sd_card_init(SPI3);
+    uint8_t buff[512];
     while(1){
+        sd_read_single_block(buff,0);
         LL_mDelay(10);
     }
 }
