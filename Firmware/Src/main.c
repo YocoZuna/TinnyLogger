@@ -16,54 +16,25 @@
  ******************************************************************************
  */
 
-#include "stm32l4xx_ll_gpio.h"
-#include "stm32l4xx_ll_utils.h"
-#include "time.h"
-#define MOSI_PIN LL_GPIO_PIN_3
-#define MISO_PIN LL_GPIO_PIN_4
-#define SCK_PIN LL_GPIO_PIN_5
+
 
 #include <stdint.h>
-#include "sd_card.h"
+#include <sys/types.h>
+#include "Third_party/FatFs/source/ff.h"
+#include "platform.h"
+
+FATFS fs[1];
+FRESULT res ;
+FIL fil;
 int main(void)
 {
-    LL_SPI_InitTypeDef spi = {
-    .TransferDirection = LL_SPI_FULL_DUPLEX,
-    .Mode = LL_SPI_MODE_MASTER,
-    .DataWidth = LL_SPI_DATAWIDTH_8BIT,
-    .ClockPolarity = LL_SPI_POLARITY_LOW,
-    .ClockPhase = LL_SPI_PHASE_1EDGE,
-    .NSS = LL_SPI_NSS_SOFT,
-    .BaudRate = LL_SPI_BAUDRATEPRESCALER_DIV256, // Szybsze dla SD
-    .BitOrder = LL_SPI_MSB_FIRST
-    };
+    uint dd;
+    char buff[100];
+    P_init_platform();
+    res = f_mount(&fs[0], "1", 1);
+    f_open(&fil, "1:/test01.txt", FA_READ);
+    f_read(&fil, (void*)buff, 20, &dd);
+    /* Append a line */
 
-    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
-    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
-    GPIO_InitStruct.Pin = MOSI_PIN | MISO_PIN | SCK_PIN;
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
-    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
-    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-    GPIO_InitStruct.Alternate = LL_GPIO_AF_6; // AF6 for SPI3
-    LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
-
-    GPIO_InitStruct.Pin = CS_PIN;
-    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
-    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-    GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
-    LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-    LL_GPIO_SetPinPull(CS_PORT, CS_PIN, LL_GPIO_PULL_UP);
-    LL_GPIO_SetPinPull(GPIOB, MISO_PIN, LL_GPIO_PULL_UP);
-    timeInit();
-    spi_init(SPI3, &spi);
-    //spi_tx(SPI3, (uint8_t*)"Hello, SD Card!", 16);
-    sd_card_init(SPI3);
-    uint8_t buff[512];
-    while(1){
-        sd_read_single_block(buff,0);
-        LL_mDelay(10);
-    }
+    int d;
 }

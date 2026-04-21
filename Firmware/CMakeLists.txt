@@ -45,7 +45,7 @@ file(GLOB HAL_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32L4xx_HAL/Src/*.c
 )
 file(GLOB FATFS_SRCS
-    ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/FatFS/source/*.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Third_party/FatFs/source/*.c
 )
 file(GLOB PLATFORM_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/platform/Src/*.c
@@ -60,6 +60,7 @@ set(sources_SRCS
     #${CMAKE_CURRENT_SOURCE_DIR}/Src/syscall.c
     ${HAL_SRCS}
     ${PLATFORM_SRCS}
+    ${FATFS_SRCS}
 )
 
 # Include directories for all compilers

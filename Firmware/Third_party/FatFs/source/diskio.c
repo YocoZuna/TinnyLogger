@@ -32,24 +32,24 @@ DSTATUS disk_status (
 	int result;
 
 	switch (pdrv) {
-	case DEV_RAM :
-		result = RAM_disk_status();
+	case DEV_FLASH:
+		result = FLASH_disk_status();
 
-		// translate the reslut code here
+		stat = (DSTATUS)result;
 
 		return stat;
 
 	case DEV_MMC :
 		result = MMC_disk_status();
 
-		// translate the reslut code here
+		stat = (DSTATUS)result;
 
 		return stat;
 
 	case DEV_USB :
 		result = USB_disk_status();
 
-		// translate the reslut code here
+		stat = (DSTATUS)result;
 
 		return stat;
 	}
@@ -70,24 +70,24 @@ DSTATUS disk_initialize (
 	int result;
 
 	switch (pdrv) {
-	case DEV_RAM :
-		result = RAM_disk_initialize();
+	case DEV_FLASH :
+		result = FLASH_disk_initialize();
 
-		// translate the reslut code here
+		stat = (DSTATUS)result;
 
 		return stat;
 
 	case DEV_MMC :
 		result = MMC_disk_initialize();
 
-		// translate the reslut code here
+		stat = (DSTATUS)result;
 
 		return stat;
 
 	case DEV_USB :
 		result = USB_disk_initialize();
 
-		// translate the reslut code here
+		stat = (DSTATUS)result;
 
 		return stat;
 	}
@@ -111,12 +111,12 @@ DRESULT disk_read (
 	int result;
 
 	switch (pdrv) {
-	case DEV_RAM :
+	case DEV_FLASH :
 		// translate the arguments here
 
-		result = RAM_disk_read(buff, sector, count);
+		result = FLASH_disk_read(buff, sector, count);
 
-		// translate the reslut code here
+		res = (DSTATUS)result;
 
 		return res;
 
@@ -125,7 +125,7 @@ DRESULT disk_read (
 
 		result = MMC_disk_read(buff, sector, count);
 
-		// translate the reslut code here
+		res = (DSTATUS)result;
 
 		return res;
 
@@ -134,7 +134,7 @@ DRESULT disk_read (
 
 		result = USB_disk_read(buff, sector, count);
 
-		// translate the reslut code here
+		res = (DSTATUS)result;
 
 		return res;
 	}
@@ -161,12 +161,12 @@ DRESULT disk_write (
 	int result;
 
 	switch (pdrv) {
-	case DEV_RAM :
+	case DEV_FLASH :
 		// translate the arguments here
 
-		result = RAM_disk_write(buff, sector, count);
+		result = FLASH_disk_write(buff, sector, count);
 
-		// translate the reslut code here
+		res = (DSTATUS)result;
 
 		return res;
 
@@ -175,7 +175,7 @@ DRESULT disk_write (
 
 		result = MMC_disk_write(buff, sector, count);
 
-		// translate the reslut code here
+		res = (DSTATUS)result;
 
 		return res;
 
@@ -184,7 +184,7 @@ DRESULT disk_write (
 
 		result = USB_disk_write(buff, sector, count);
 
-		// translate the reslut code here
+		res = (DSTATUS)result;
 
 		return res;
 	}
@@ -209,9 +209,9 @@ DRESULT disk_ioctl (
 	int result;
 
 	switch (pdrv) {
-	case DEV_RAM :
+	case DEV_FLASH :
 
-		// Process of the command for the RAM drive
+		// Process of the command for the FLASH drive
 
 		return res;
 

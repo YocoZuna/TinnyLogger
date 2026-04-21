@@ -6,35 +6,38 @@
 #include "stm32l4xx_ll_gpio.h"
 #include <stdint.h>
 #include <string.h>
-
+#include <stdbool.h>
 #define TIMEOUT 10
 
 static uint8_t response_R1;
 static uint8_t response_R7_R3[4];
-
-static SPI_TypeDef *SD_SPI = NULL;
+static SPI_TypeDef *SD_SPI = SPI3;
+static uint8_t cardStatus = 3; // Card not ready
 
 static void sd_delay(uint32_t ms);
 static void sd_deselect();
 static void sd_select();
 static void sd_power_on();
+
 static bool sd_read_single_block(uint8_t* buff,size_t len);
-void sd_card_init(SPI_TypeDef *SPIx)
+int SD_disk_status()
 {
-    if(SPIx ==NULL) return;
-    SD_SPI = SPIx;
-    
+    return 0;
+}
+int SD_card_init(){
+
+
     sd_power_on();
 
     sd_select();
     
     // Send CMD0 to reset the SD card
-    response_R1 = sd_card_send_command(CMD0, 0);
+    response_R1 = SD_card_send_command(CMD0, 0);
 
-    if (response_R1!=0x01) return; 
+    if (response_R1!=0x01) return -3; 
 
     // Send CMD8 to check voltage range and SD card version
-    response_R1 = sd_card_send_command(CMD8, 0x1AA); // Argument for CMD8: 0x1AA (check voltage range)
+    response_R1 = SD_card_send_command(CMD8, 0x1AA); // Argument for CMD8: 0x1AA (check voltage range)
     //TODO Add handling for v1 and MMC
 
     for(uint8_t i=0;i<sizeof(response_R7_R3);i++){
@@ -45,28 +48,30 @@ void sd_card_init(SPI_TypeDef *SPIx)
         // Invalid voltage range, SD card may not be compatible
 
         sd_deselect();
-        return;
+        return 3;
     }
 
     //Send CMD 55
 
     do {
         
-        (void)sd_card_send_command(CMD55, 0);
+        (void)SD_card_send_command(CMD55, 0);
 
-        response_R1 = sd_card_send_command(ACMD41, 0x40000000); // Argument 0x40000000 to indicate host supports SDHC/SDXC     
+        response_R1 = SD_card_send_command(ACMD41, 0x40000000); // Argument 0x40000000 to indicate host supports SDHC/SDXC     
 
     } while (response_R1!= 0x00);
-    sd_card_send_command(CMD58, 0);  // Argument 0 dla CMD58
+    SD_card_send_command(CMD58, 0);  // Argument 0 dla CMD58
 
     for(uint8_t i=0;i<sizeof(response_R7_R3);i++){
         spi_rx_byte(SD_SPI, &response_R7_R3[i]);
     }
     sd_deselect();
+
+    return 0;
 }
 
 
-ErrorStatus sd_card_send_command(uint8_t cmd, uint32_t arg)
+int SD_card_send_command(uint8_t cmd, uint32_t arg)
 {
     uint8_t command_packet[CMD_SIZE];
     uint8_t response_buffer[CMD_SIZE];
@@ -91,20 +96,20 @@ ErrorStatus sd_card_send_command(uint8_t cmd, uint32_t arg)
     return response;
 }
 
-uint8_t SD_disk_read(uint8_t pdr,uint8_t* buff,uint8_t sector,uint8_t count){
+int SD_disk_read(uint8_t* buff,uint32_t sector,int count){
 
     sd_select();
     if(count==1){
-        if((sd_card_send_command(CMD17, sector)==0)&&sd_read_single_block(buff,512)) count = 0 ;
+        if((SD_card_send_command(CMD17, sector)==0)&&sd_read_single_block(buff,512)) count = 0 ;
     }
     else{
-        if (sd_card_send_command(CMD18, sector)==0){
+        if (SD_card_send_command(CMD18, sector)==0){
             do{
                 if(!sd_read_single_block(buff, 512)) break;
-                buff+=512
+                buff+=512;
             }while(--count);
 
-            sd_card_send_command(CMD12, 0);
+            SD_card_send_command(CMD12, 0);
         }
     }   
     sd_deselect();
@@ -123,7 +128,7 @@ static bool sd_read_single_block(uint8_t* buff,size_t len)
         
     }while(token==0xFF && retires--);
     
-    if(token!=0xFE) return FALSE;
+    if(token!=0xFE) return false;
 
     uint8_t dummy_buff[512];
     memset(dummy_buff,SD_DUMMY_BYTE,SD_SECTOR_SIZE);
@@ -134,7 +139,7 @@ static bool sd_read_single_block(uint8_t* buff,size_t len)
     spi_rx_byte(SD_SPI, &token);
     spi_rx_byte(SD_SPI, &token);
 
-    return TRUE;
+    return true;
 }
 static void sd_delay(uint32_t ms){
     
@@ -163,7 +168,7 @@ static void sd_power_on(){
     sd_select();
     
     // Send CMD0 to reset the SD card
-    }while(sd_card_send_command(CMD0, 0)!=0x01);
+    }while(SD_card_send_command(CMD0, 0)!=0x01);
 
     sd_deselect();
 }

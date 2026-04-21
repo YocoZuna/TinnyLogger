@@ -5,6 +5,7 @@
 #include "stm32l432xx.h"
 #include <stddef.h>
 #include <stdint.h>
+#include "platform.h"
 
 #define SD_CMD0_CRC 0x95
 #define SD_CMD8_CRC 0x87
@@ -16,19 +17,7 @@
 
 
 
-void sd_card_init(SPI_TypeDef *SPIx);
-//inline _Bool sd_card_check_presence();
-/*
-    @brief Sends a command to the SD card over SPI. This function constructs the command packet according to the SD card protocol and transmits it using the SPI interface.
-    @param cmd: The command index (e.g., CMD0, CMD8) to be sent to the SD card.
-    @param arg: The argument associated with the command, which may be required for certain commands (e.g., CMD8 requires an argument to specify voltage range).
-
-    0 CMD ARGUMENT CRC END_BIT
-*/
-
-
-
-ErrorStatus sd_card_receive_R1(uint8_t* response, uint32_t timeout);
-ErrorStatus sd_card_receive_R7_R3(uint8_t* responseBuffer,uint8_t buffer_size, uint32_t timeout);
-ErrorStatus sd_card_send_command(uint8_t cmd, uint32_t arg);
-
+int SD_card_init();
+int SD_disk_status();
+int SD_card_send_command(uint8_t cmd, uint32_t arg);
+int SD_disk_read(uint8_t* buff,uint32_t sector,int count);
