@@ -26,14 +26,19 @@
 FATFS fs[1];
 FRESULT res ;
 FIL fil;
+PARTITION VolToPart[FF_VOLUMES] = {
+    {0, 0},   // "0:" → physical drive 0, whole drive
+    {1, 0},   // "1:" → physical drive 1, whole drive
+};
+
 int main(void)
 {
     uint dd;
     char buff[100];
     P_init_platform();
-    res = f_mount(&fs[0], "1", 1);
-    f_open(&fil, "1:/test01.txt", FA_READ);
-    f_read(&fil, (void*)buff, 20, &dd);
+    res = f_mount(&fs[0], "1:", 1);
+    res =f_open(&fil, "1:test01.txt", FA_READ);
+    res = f_read(&fil, (void*)buff, 20, &dd);
     /* Append a line */
 
     int d;
