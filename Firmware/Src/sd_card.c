@@ -20,6 +20,8 @@ static void sd_select();
 static void sd_power_on();
 
 static bool sd_read_single_block(uint8_t* buff,size_t len);
+static bool sd_write_single_block(const uint8_t* buff,size_t len);
+static bool sd_write_multiple_blocks(uint32_t sector_addr, uint8_t* buff, size_t count);
 int SD_disk_status()
 {
     return 0;
@@ -85,7 +87,7 @@ int SD_card_send_command(uint8_t cmd, uint32_t arg)
     // Calculate CRC for CMD0 and CMD8, otherwise use dummy CRC
     command_packet[5] = (cmd == CMD0) ? SD_CMD0_CRC : (cmd == CMD8) ? SD_CMD8_CRC : SD_DUMMY_CRC;
 
-    spi_tx_rx(SD_SPI, command_packet, response_buffer, CMD_SIZE);
+    spi_tx_rx(SD_SPI, command_packet, NULL, CMD_SIZE);
 
     if(cmd==CMD12) spi_rx_byte(SD_SPI, response_buffer);
     do{
@@ -121,7 +123,6 @@ static bool sd_read_single_block(uint8_t* buff,size_t len)
 {
     uint8_t retires= 200;
     uint8_t token;
-    
 
     do{
         spi_rx_byte(SD_SPI, &token);
@@ -140,6 +141,83 @@ static bool sd_read_single_block(uint8_t* buff,size_t len)
     spi_rx_byte(SD_SPI, &token);
 
     return true;
+}
+
+
+static bool sd_write_single_block(const uint8_t* buff, size_t len) {
+    uint8_t res;
+
+    do {
+        spi_rx_byte(SD_SPI, &res);
+    } while (res != 0xFF);
+
+    spi_tx_byte(SD_SPI, 0xFE);
+
+    spi_tx_rx(SD_SPI, buff, NULL, len); 
+
+    spi_tx_byte(SD_SPI, 0xFF);
+    spi_tx_byte(SD_SPI, 0xFF);
+
+    // 5. Odbierz Data Response Token
+    spi_rx_byte(SD_SPI, &res);
+    if ((res & 0x1F) != 0x05) {
+        return false; 
+    }
+
+    do {
+        spi_rx_byte(SD_SPI, &res);
+    } while (res == 0x00);
+
+    return true;
+}
+
+static bool sd_write_multiple_blocks(uint32_t sector_addr, uint8_t* buff, size_t count) {
+    uint8_t res;
+
+    if (SD_card_send_command(CMD25,sector_addr) != 0x00) return false;
+
+    for (size_t i = 0; i < count; i++) {
+        do {
+            spi_rx_byte(SD_SPI, &res);
+        } while (res != 0xFF);
+
+        spi_tx_byte(SD_SPI, 0xFC);
+
+        spi_tx_rx(SD_SPI, &buff[i * 512], NULL, 512);
+
+        spi_tx_byte(SD_SPI, 0xFF);
+        spi_tx_byte(SD_SPI, 0xFF);
+
+        spi_rx_byte(SD_SPI, &res);
+        if ((res & 0x1F) != 0x05) return false; // Błąd zapisu bloku
+        
+        do {
+            spi_rx_byte(SD_SPI, &res);
+        } while (res == 0x00);
+    }
+
+    spi_tx_byte(SD_SPI, 0xFD);
+
+    do {
+        spi_rx_byte(SD_SPI, &res);
+    } while (res == 0x00);
+
+    return true;
+}
+
+int SD_disk_write(const uint8_t* buff,uint32_t sector,int count){
+
+    sd_select();
+
+    if(count==1){
+        if((SD_card_send_command(CMD24, sector)==0)&&sd_write_single_block(buff,512)) count = 0 ;
+    }
+    else{
+        sd_write_multiple_blocks(sector,buff,count);
+    }
+
+    sd_deselect();
+    return count;
 }
 static void sd_delay(uint32_t ms){
     

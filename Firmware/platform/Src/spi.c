@@ -18,13 +18,14 @@ void spi_init( SPI_TypeDef*SPIx,LL_SPI_InitTypeDef* spi_init_struct)
 
 void spi_tx_rx( SPI_TypeDef*SPIx, const uint8_t* tx_buffer, uint8_t* rx_buffer, size_t size)
 {
+    uint8_t recv;
     for (size_t i = 0; i < size; i++) {
         while (!LL_SPI_IsActiveFlag_TXE(SPIx));
         LL_SPI_TransmitData8(SPIx, tx_buffer[i]);
 
         while (!LL_SPI_IsActiveFlag_RXNE(SPIx));
-        rx_buffer[i]=LL_SPI_ReceiveData8(SPIx); // discard
-
+        recv=LL_SPI_ReceiveData8(SPIx); // discard
+        if(rx_buffer!=NULL) rx_buffer[i]=recv;
 
         while (LL_SPI_IsActiveFlag_BSY(SPIx));
     }

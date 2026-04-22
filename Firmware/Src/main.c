@@ -33,13 +33,13 @@ PARTITION VolToPart[FF_VOLUMES] = {
 
 int main(void)
 {
-    uint dd;
-    char buff[100];
-    P_init_platform();
-    res = f_mount(&fs[0], "1:", 1);
-    res =f_open(&fil, "1:test01.txt", FA_READ);
-    res = f_read(&fil, (void*)buff, 20, &dd);
-    /* Append a line */
 
-    int d;
+    P_init_platform();
+    uint d;
+    res = f_mount(&fs[0], "1:", 1);
+    res =f_open(&fil, "1:Text.txt", FA_WRITE | FA_OPEN_APPEND);
+    res = f_write(&fil, "Test Test", 11, &d);
+    /* Append a line */
+    f_close(&fil);
+    int a;
 }
