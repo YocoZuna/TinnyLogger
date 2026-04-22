@@ -52,15 +52,15 @@ file(GLOB PLATFORM_SRCS
 )
 # Sources
 set(sources_SRCS
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/main.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/Src/spi.c
+    ${HAL_SRCS}
+    ${PLATFORM_SRCS}
+    ${FATFS_SRCS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/Src/main.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/sd_card.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/stm32l4xx_it.c
     #${CMAKE_CURRENT_SOURCE_DIR}/Src/sysmem.c
     #${CMAKE_CURRENT_SOURCE_DIR}/Src/syscall.c
-    ${HAL_SRCS}
-    ${PLATFORM_SRCS}
-    ${FATFS_SRCS}
+
 )
 
 # Include directories for all compilers
