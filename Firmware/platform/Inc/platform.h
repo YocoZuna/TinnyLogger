@@ -22,7 +22,7 @@ static inline void P_init_SD_SPI(){
     .ClockPolarity = LL_SPI_POLARITY_LOW,
     .ClockPhase = LL_SPI_PHASE_1EDGE,
     .NSS = LL_SPI_NSS_SOFT,
-    .BaudRate = LL_SPI_BAUDRATEPRESCALER_DIV256, // Szybsze dla SD
+    .BaudRate = LL_SPI_BAUDRATEPRESCALER_DIV2, // Szybsze dla SD
     .BitOrder = LL_SPI_MSB_FIRST
     };
 
