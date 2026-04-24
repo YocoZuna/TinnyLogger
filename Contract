@@ -24,6 +24,7 @@ Logger v0.0.3
 Requirements:
 - low power modes
 - support multiple sensors
+- unit test
 
 Logger v0.0.4
 
