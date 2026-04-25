@@ -53,4 +53,7 @@ static inline void P_init_time_base(){
 }
 static inline void P_init_platform(){
     P_init_time_base();
+    /* Init FPU*/
+    SCB->CPACR |= (0xF << 20);
+    __DSB(); __ISB();
 }

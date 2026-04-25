@@ -19,32 +19,22 @@
 
 
 #include <stdint.h>
-#include <sys/types.h>
-#include "Third_party/FatFs/source/ff.h"
-#include "platform.h"
 
-FATFS fs[1];
-FRESULT res ;
-FIL fil;
-PARTITION VolToPart[FF_VOLUMES] = {
-    {0, 0},   // "0:" → physical drive 0, whole drive
-    {1, 0},   // "1:" → physical drive 1, whole drive
-};
+#include "platform.h"
+#include "logger.h"
+#include <string.h>
 /*
 
 1118
 */
 int main(void)
 {
-
+    char buffor[] ="Hello THis is my test\n\r";
     P_init_platform();
-    uint d;
-    
-    res = f_mount(&fs[0], "1:", 1);
-    res =f_open(&fil, "1:Text.txt", FA_WRITE | FA_OPEN_APPEND);
-    res = f_write(&fil, "Test Test", 11, &d);
-    /* Append a line */
-    f_close(&fil);
-
-    int a;
+    logger_init();
+    logger_write(buffor,strlen(buffor));
+    logger_printf("Temperatura:%.2f;Himitiy%.2f",23.24,85.12);
+    logger_status_t log;
+    logger_deinit();
+    log =logger_write(buffor,strlen(buffor));
 }
