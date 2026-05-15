@@ -41,6 +41,11 @@ set(cpu_PARAMS
     # -mcpu, -mfloat, -mfloat-abi, ...
 )
 
+
+file(GLOB AHT20_SRCS
+    ${CMAKE_CURRENT_SOURCE_DIR}/Sensors/AHT20/Src/*.c
+)
+
 file(GLOB HAL_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32L4xx_HAL/Src/*.c
 )
@@ -60,7 +65,8 @@ set(sources_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/logger.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/stm32l4xx_it.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/sysmem.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/Src/syscall.c
+    #${CMAKE_CURRENT_SOURCE_DIR}/Src/syscall.c
+    ${AHT20_SRCS}
 
 )
 
@@ -72,7 +78,7 @@ set(include_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32L4xx_HAL/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/FatFS/source
     ${CMAKE_CURRENT_SOURCE_DIR}/platform/Inc
-
+    ${CMAKE_CURRENT_SOURCE_DIR}/Sensors/AHT20/Inc
 )
 
 # Include directories for each compiler
