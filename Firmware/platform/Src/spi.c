@@ -9,6 +9,7 @@
 
 void spi_init( SPI_TypeDef*SPIx,LL_SPI_InitTypeDef* spi_init_struct)
 {
+    LL_SPI_Disable(SPIx);
     if (SPIx == SPI1) LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SPI1);
     else if (SPIx == SPI3) LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_SPI3);
     
