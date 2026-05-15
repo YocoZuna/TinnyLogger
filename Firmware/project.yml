@@ -101,8 +101,16 @@
     - -:test/support
   :source:
     - Src/**
+    - platform/Src/**
+    - Third_party/FatFs/source
   :include:
+    - Inc/**
     - Src/** # In simple projects, this entry often duplicates :source
+    - platform/Inc/**
+    - Drivers/STM32L4xx_HAL/Inc/**
+    - Drivers/CMSIS/Include/**
+    - Drivers/CMSIS/Device/**
+    - Third_party/FatFs/source
   :support:
     - test/support
   :libraries: []
@@ -122,6 +130,8 @@
 :defines:
   :test:
     - TEST # Simple list option to add symbol 'TEST' to compilation of all files in all test executables
+    - STM32L432xx
+    - USE_FULL_LL_DRIVER
   :release: []
 
   # Enable to inject name of a test as a unique compilation symbol into its respective executable build. 
@@ -142,10 +152,14 @@
 
 # Configuration Options specific to CMock. See CMock docs for details
 :cmock:
-  # Core conffiguration
-  :plugins:                        # What plugins should be used by CMock?
+  :mock_prefix: mock_
+  :when_no_prototypes: :warn
+  :enforce_strict_ordering: TRUE
+  :plugins:
     - :ignore
     - :callback
+    - :expect_any_args
+    - :return_thru_ptr # 
   :verbosity:  2                   # the options being 0 errors only, 1 warnings and errors, 2 normal info, 3 verbose
   :when_no_prototypes:  :warn      # the options being :ignore, :warn, or :erro
 
