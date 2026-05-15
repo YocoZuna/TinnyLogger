@@ -2,7 +2,7 @@
 #include "stm32l4xx_ll_bus.h"
 #include "stm32l4xx_ll_i2c.h"
 
-
+/*
 
 void i2c_init(I2C_TypeDef *I2C, LL_I2C_InitTypeDef *i2c_init_struct)
 {
@@ -39,3 +39,5 @@ void i2c_deinit(I2C_TypeDef *I2C)
     else if (I2C == I2C2) LL_APB1_GRP1_DisableClock(LL_APB1_GRP1_PERIPH_I2C2);
     LL_I2C_Disable(I2C);
 }
+
+*/
