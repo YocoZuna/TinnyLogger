@@ -1,8 +1,8 @@
 #pragma  once
 
 #include <stddef.h>
-#include "Third_party/FatFs/source/ff.h"
-#include "Third_party/FatFs/source/storage.h"
+#include "ff.h"
+#include "storage.h"
 
 typedef enum{
     LOG_OK = 0,

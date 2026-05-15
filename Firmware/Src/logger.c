@@ -1,6 +1,6 @@
 #include "logger.h"
-#include "Third_party/FatFs/source/diskio.h"
-#include "Third_party/FatFs/source/ff.h"
+#include "diskio.h"
+#include "ff.h"
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
