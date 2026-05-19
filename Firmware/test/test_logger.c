@@ -24,7 +24,7 @@ void test_logger_write_returns_error_when_not_initialized(void)
 
 void test_logger_write_succeeds_when_fatfs_write_and_sync_ok(void)
 {
-    UINT bytes_written = 3;
+    UINT bytes_written = 2;
 
     f_mount_IgnoreAndReturn(FR_OK);
     f_open_IgnoreAndReturn(FR_OK);

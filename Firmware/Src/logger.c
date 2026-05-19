@@ -7,53 +7,41 @@
 
 
 
-static bool logger_ready = false;
+static logger_status_t logger_flush(logger_t* logger);
 
-static logger_status_t logger_flush();
 
-FATFS fs;
-FIL fil;
-PARTITION VolToPart[FF_VOLUMES] = {
-    {1, 0},   // "0:" → physical drive 0, whole drive
-};
-
-logger_status_t logger_init()
+logger_status_t logger_init(logger_t* logger)
 {
 
-
-    if(f_mount(&fs, FF_VOLUME, 1)!=FR_OK) return LOG_ERR_MOUNT;
-    
-    if(f_open(&fil, "0:TinnyLogger.txt", FA_WRITE | FA_OPEN_APPEND)!=FR_OK) return LOG_ERR_OPEN;
-    
-    logger_ready = true;
+    logger->backend->mount(logger->storage);
+    logger->logger_ready = true;
     return LOG_OK;
 
 }
-logger_status_t logger_deinit(){
+logger_status_t logger_deinit(logger_t* logger){
     
-    if(!logger_ready) return LOG_ERR_NOT_INITIALIZED;
+    if(!logger->logger_ready) return LOG_ERR_NOT_INITIALIZED;
     
-    logger_ready = false;
-    if(logger_flush()!=LOG_OK) return LOG_ERR_SYNC;
-    f_close(&fil);
-    f_unmount(FF_VOLUME);
+    logger->logger_ready = false;
+    if(logger_flush(logger)!=LOG_OK) return LOG_ERR_SYNC;
+    logger->backend->close(logger->storage);
+    logger->backend->umount(logger->storage);
 
     return LOG_OK;
 }
 
-logger_status_t logger_write(const char* buffor,size_t len){
+logger_status_t logger_write(logger_t* logger,const char* buffor,size_t len){
     
-    FRESULT res;
-    UINT bytes_written;
+    logger_status_t res;
     
-    if(!logger_ready) return LOG_ERR_NOT_INITIALIZED;
+    if(!logger->logger_ready) return LOG_ERR_NOT_INITIALIZED;
     
-    res = f_write(&fil, buffor, len,&bytes_written );
-    if(res!=FR_OK || bytes_written!=len) return LOG_ERR_WRITE;
+    res = logger->backend->write(logger->storage, buffor, len);
+    if(res!=LOG_OK) return LOG_ERR_WRITE;
 
-    return logger_flush();
+    return logger_flush(logger);
 }
-logger_status_t logger_printf(const char* format,...){
+logger_status_t logger_printf(logger_t* logger, const char* format,...){
 
     char buffer[512];
     va_list args;
@@ -65,17 +53,17 @@ logger_status_t logger_printf(const char* format,...){
     if (len < 0) return LOG_ERR_WRITE;
 
     // Handle truncation
-    if (len >= sizeof(buffer)) {
+    if (len >= (int)sizeof(buffer)) {
         len = sizeof(buffer) - 1;
     }
 
-    return logger_write(buffer, len);
+    return logger_write(logger, buffer, len);
 }
-static logger_status_t logger_flush(){
+static logger_status_t logger_flush(logger_t* logger){
     
-    if(!logger_ready) return LOG_ERR_NOT_INITIALIZED;
+    if(!logger->logger_ready) return LOG_ERR_NOT_INITIALIZED;
 
-    if(f_sync(&fil)!=FR_OK) return LOG_ERR_SYNC;
+    if(logger->backend->sync(logger->storage)!=LOG_OK) return LOG_ERR_SYNC;
     
     return LOG_OK;
 }

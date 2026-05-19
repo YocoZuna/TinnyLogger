@@ -29,12 +29,5 @@
 */
 int main(void)
 {
-    char buffor[] ="Hello THis is my test\n\r";
-    P_init_platform();
-    logger_init();
-    logger_write(buffor,strlen(buffor));
-    logger_printf("Temperatura:%.2f;Himitiy%.2f",23.24,85.12);
-    logger_status_t log;
-    logger_deinit();
-    log =logger_write(buffor,strlen(buffor));
+
 }

@@ -4,11 +4,6 @@
 #include "platform.h"
 
 
-
-
-#define FF_VOLUME "0:"
-#define FF_CONSTRUCT_PATH(x)  FF_VOLUME##x
-
 /* FLASH disk not present always return Not ready error*/
 static inline int FLASH_disk_status(){return 3;}
 static inline int FLASH_disk_initialize(){return 3;}
