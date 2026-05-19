@@ -12,7 +12,9 @@ static logger_status_t logger_flush(logger_t* logger);
 
 logger_status_t logger_init(logger_t* logger)
 {
-
+    if (logger == NULL || logger->backend == NULL || logger->storage == NULL) {
+        return LOG_ERR_INVALID_PARAM;
+    }
     logger->backend->mount(logger->storage);
     logger->logger_ready = true;
     return LOG_OK;
