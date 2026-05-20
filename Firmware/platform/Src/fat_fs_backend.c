@@ -2,7 +2,6 @@
 #include "logger.h"
 #include <stdio.h>
 
-#define FF_VOLUME "0:"
 
 PARTITION VolToPart[FF_VOLUMES] = {
     {1, 0},   // "0:" → physical drive 0, whole drive

@@ -4,6 +4,8 @@
 #include "ff.h"
 #include "logger_status.h"
 
+#define FF_VOLUME "0:"
+
 typedef struct{
     FATFS fs;
     FIL file;
