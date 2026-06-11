@@ -70,13 +70,18 @@ AHT20_Status_t AHT20_Create(struct AHT20* handle,
                     SENSOR_write_t write)
 {
 
-    AHT20_Status_t status = AHT20_RegisterHooks(handle,delay,read,write);
-    if (status != AHT20_OK) {
-        return status;
+
+    if (delay== NULL || read == NULL || write == NULL) {
+        handle->interface.delay = itf_AHT20_delay;
+        handle->interface.read = itf_AHT20_read;
+        handle->interface.write = itf_AHT20_write;
     }
-    handle->interface.delay = delay;
-    handle->interface.read = read;
-    handle->interface.write = write;
+    else {
+         AHT20_Status_t status = AHT20_RegisterHooks(handle,delay,read,write);
+        if (status != AHT20_OK) {
+            return status;
+        }
+    }
     handle->humidPercent = 0;
     handle->humidRaw = 0;
     handle->tempC = 0;

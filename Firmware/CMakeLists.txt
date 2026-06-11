@@ -55,6 +55,8 @@ file(GLOB FATFS_SRCS
 file(GLOB PLATFORM_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/platform/Src/*.c
 )
+
+
 # Sources
 set(sources_SRCS
     ${HAL_SRCS}
@@ -66,7 +68,7 @@ set(sources_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/stm32l4xx_it.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/sysmem.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/system_stm32l4xx.c
-    #${AHT20_SRCS}
+    ${AHT20_SRCS}
 
 )
 
@@ -78,7 +80,7 @@ set(include_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32L4xx_HAL/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/Third_party/FatFs/source
     ${CMAKE_CURRENT_SOURCE_DIR}/platform/Inc
-    #${CMAKE_CURRENT_SOURCE_DIR}/Sensors/AHT20/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Sensors/AHT20/Inc
 )
 
 # Include directories for each compiler

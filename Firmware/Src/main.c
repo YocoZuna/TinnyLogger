@@ -20,14 +20,43 @@
 
 #include <stdint.h>
 
+#include "Sensors/AHT20/Inc/AHT20.h"
 #include "platform.h"
 #include "logger.h"
 #include <string.h>
-/*
-
-1118
-*/
+#include <stdio.h>
+#include <uart.h>
+#include "AHT20.h"
+#include "i2c.h"
 int main(void)
 {
 
+
+    P_init_FPU();
+    P_init_time_base();
+    P_init_SD_SPI();
+    P_init_I2CX();
+    P_init_UART();
+
+    struct AHT20 sensor;
+    AHT20_Create(&sensor, NULL,NULL,NULL);
+    AHT20_Init(&sensor);
+    
+    while (1)
+    {
+    
+        AHT20_ReadTempAndHum(&sensor);
+        AHT20_CalcTemp(&sensor);
+        AHT20_CalcTHumid(&sensor);
+        char buffer[100];
+        snprintf(buffer, sizeof(buffer), "Temperature: %.2f C, Humidity: %.2f %%\n", sensor.tempC, sensor.humidPercent);
+        
+        for(size_t i=0;i<strlen(buffer);i++){
+            uart_tx_byte(CONSOLE_UART, buffer[i]);
+        }
+        // Alternatively, you can use uart_tx_string if available
+
+        time_1ms_delay(1000); // Delay for 1 second
+        // Main loop can be used for other tasks
+    }
 }

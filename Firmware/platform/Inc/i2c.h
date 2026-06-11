@@ -5,7 +5,9 @@
 #include <stdint.h>
 
 
-
+#define I2C_PORT I2C1
+#define SCL_PIN LL_GPIO_PIN_9
+#define SDA_PIN LL_GPIO_PIN_10
 
 void i2c_init(I2C_TypeDef *I2C, LL_I2C_InitTypeDef *i2c_init_struct);
 void i2c_tx_byte(I2C_TypeDef *I2C,const uint8_t slaveAddr,const uint8_t memAddr, const uint8_t data);
