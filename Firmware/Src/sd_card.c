@@ -12,7 +12,7 @@
 static uint8_t response_R1;
 static uint8_t response_R7_R3[4];
 static SPI_TypeDef *SD_SPI = SPI3;
-static uint8_t cardStatus = 3; // Card not ready
+
 
 static void sd_delay(uint32_t ms);
 static void sd_deselect();
@@ -21,7 +21,7 @@ static void sd_power_on();
 
 static bool sd_read_single_block(uint8_t* buff,size_t len);
 static bool sd_write_single_block(const uint8_t* buff,size_t len);
-static bool sd_write_multiple_blocks(uint32_t sector_addr, uint8_t* buff, size_t count);
+static bool sd_write_multiple_blocks(uint32_t sector_addr, const uint8_t* buff, size_t count);
 int SD_disk_status()
 {
     return 0;
@@ -171,7 +171,7 @@ static bool sd_write_single_block(const uint8_t* buff, size_t len) {
     return true;
 }
 
-static bool sd_write_multiple_blocks(uint32_t sector_addr, uint8_t* buff, size_t count) {
+static bool sd_write_multiple_blocks(uint32_t sector_addr, const uint8_t*  buff, size_t count) {
     uint8_t res;
 
     if (SD_card_send_command(CMD25,sector_addr) != 0x00) return false;
