@@ -2,8 +2,11 @@
 
 #include "sd_card.h"
 #include "spi.h"
+#include "stm32l4xx_ll_bus.h"
+#include "stm32l4xx_ll_gpio.h"
 #include "time.h"
 #include "i2c.h"
+#include "uart.h"
 
 #define SD_CARD_SPI SPI3
 #define MOSI_PIN LL_GPIO_PIN_3
@@ -14,6 +17,9 @@
 #define SCL_PIN LL_GPIO_PIN_9
 #define SDA_PIN LL_GPIO_PIN_10
 
+#define CONSOLE_UART USART2
+#define CONSOLE_TX_PIN LL_GPIO_PIN_2
+#define CONSOLE_RX_PIN LL_GPIO_PIN_15
 
 
 static inline void P_init_SD_SPI();
@@ -89,4 +95,38 @@ static inline void P_init_I2CX() {
     };
 
     i2c_init(I2C_PORT, &i2c_init_struct);
+}
+
+static inline void P_init_UART() {
+    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
+
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+    GPIO_InitStruct.Pin = CONSOLE_TX_PIN;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    GPIO_InitStruct.Alternate = LL_GPIO_AF_7; // AF7 for USART2
+    LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+
+    GPIO_InitStruct.Pin = CONSOLE_RX_PIN;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    GPIO_InitStruct.Alternate = LL_GPIO_AF_3; // AF3 for USART2
+    LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    LL_USART_InitTypeDef uart_init_struct = {
+        .BaudRate = 115200,
+        .DataWidth = LL_USART_DATAWIDTH_8B,
+        .StopBits = LL_USART_STOPBITS_1,
+        .Parity = LL_USART_PARITY_NONE,
+        .TransferDirection = LL_USART_DIRECTION_TX_RX,
+        .HardwareFlowControl = LL_USART_HWCONTROL_NONE,
+        .OverSampling = LL_USART_OVERSAMPLING_16
+    };
+
+    uart_init(CONSOLE_UART, &uart_init_struct);
 }

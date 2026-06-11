@@ -65,7 +65,7 @@ set(sources_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/logger.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/stm32l4xx_it.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/sysmem.c
-    #${CMAKE_CURRENT_SOURCE_DIR}/Src/syscall.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Src/system_stm32l4xx.c
     #${AHT20_SRCS}
 
 )
