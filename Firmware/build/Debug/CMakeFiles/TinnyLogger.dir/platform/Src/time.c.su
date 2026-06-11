@@ -1,0 +1,4 @@
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_cortex.h:271:22:LL_SYSTICK_EnableIT	4	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Src/time.c:10:6:timeInit	8	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Src/time.c:15:10:getTime	4	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Src/time.c:19:6:time_1ms_delay	16	static

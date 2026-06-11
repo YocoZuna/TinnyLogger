@@ -1,0 +1,14 @@
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_bus.h:1087:22:LL_APB1_GRP1_EnableClock	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_bus.h:1263:22:LL_APB1_GRP1_DisableClock	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_bus.h:1673:22:LL_APB2_GRP1_EnableClock	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_bus.h:1759:22:LL_APB2_GRP1_DisableClock	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_usart.h:697:22:LL_USART_Enable	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_usart.h:711:22:LL_USART_Disable	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_usart.h:3151:26:LL_USART_IsActiveFlag_RXNE	2
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_usart.h:3191:26:LL_USART_IsActiveFlag_TXE	2
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_usart.h:4547:25:LL_USART_ReceiveData8	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_usart.h:4570:22:LL_USART_TransmitData8	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Src/uart.c:6:6:uart_init	3
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Src/uart.c:16:6:uart_tx_byte	2
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Src/uart.c:20:6:uart_rx_byte	2
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Src/uart.c:24:6:uart_deinit	3

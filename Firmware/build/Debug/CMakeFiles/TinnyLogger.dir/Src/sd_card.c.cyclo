@@ -1,0 +1,12 @@
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Src/sd_card.c:25:5:SD_disk_status	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Src/sd_card.c:29:5:SD_card_init	7
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Src/sd_card.c:76:5:SD_card_send_command	5
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Src/sd_card.c:101:5:SD_disk_read	7
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Src/sd_card.c:122:13:sd_read_single_block	4
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Src/sd_card.c:147:13:sd_write_single_block	4
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Src/sd_card.c:174:13:sd_write_multiple_blocks	7
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Src/sd_card.c:208:5:SD_disk_write	4
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Src/sd_card.c:222:13:sd_delay	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Src/sd_card.c:226:13:sd_deselect	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Src/sd_card.c:230:13:sd_select	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Src/sd_card.c:234:13:sd_power_on	3

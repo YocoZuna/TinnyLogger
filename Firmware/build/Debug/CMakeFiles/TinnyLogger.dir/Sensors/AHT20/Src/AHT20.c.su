@@ -1,0 +1,11 @@
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Sensors/AHT20/Src/AHT20.c:6:16:AHT20_CalcCRC	32	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Sensors/AHT20/Src/AHT20.c:24:32:getStatusRegister	24	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Sensors/AHT20/Src/AHT20.c:37:32:calibrateSensor	24	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Sensors/AHT20/Src/AHT20.c:67:16:AHT20_Create	32	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Sensors/AHT20/Src/AHT20.c:92:16:AHT20_RegisterHooks	24	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Sensors/AHT20/Src/AHT20.c:110:16:AHT20_Init	24	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Sensors/AHT20/Src/AHT20.c:140:16:AHT20_DeInit	16	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Sensors/AHT20/Src/AHT20.c:157:6:AHT20_ReadTempAndHum	32	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Sensors/AHT20/Src/AHT20.c:180:6:AHT20_CalcTemp	16	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Sensors/AHT20/Src/AHT20.c:187:6:AHT20_CalcTHumid	16	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Sensors/AHT20/Src/AHT20.c:201:6:AHT20_SoftReset	24	static

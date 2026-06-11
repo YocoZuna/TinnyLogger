@@ -1,0 +1,16 @@
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_i2c.h:429:22:LL_I2C_Enable	16	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_i2c.h:443:22:LL_I2C_Disable	16	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_i2c.h:1565:26:LL_I2C_IsActiveFlag_TXIS	16	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_i2c.h:1578:26:LL_I2C_IsActiveFlag_RXNE	16	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_i2c.h:1617:26:LL_I2C_IsActiveFlag_STOP	16	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_i2c.h:1741:26:LL_I2C_IsActiveFlag_BUSY	16	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_i2c.h:1774:22:LL_I2C_ClearFlag_STOP	16	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_i2c.h:2133:22:LL_I2C_HandleTransfer	32	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_i2c.h:2225:25:LL_I2C_ReceiveData8	16	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_i2c.h:2237:22:LL_I2C_TransmitData8	16	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_bus.h:1087:22:LL_APB1_GRP1_EnableClock	24	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_bus.h:1263:22:LL_APB1_GRP1_DisableClock	16	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Src/i2c.c:7:6:i2c_init	16	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Src/i2c.c:15:6:i2c_tx_byte	24	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Src/i2c.c:24:6:i2c_rx_byte	32	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Src/i2c.c:33:6:i2c_deinit	16	static

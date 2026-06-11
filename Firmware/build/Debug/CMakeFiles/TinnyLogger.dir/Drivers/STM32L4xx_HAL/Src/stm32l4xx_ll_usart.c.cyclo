@@ -1,0 +1,14 @@
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_usart.h:722:26:LL_USART_IsEnabled	2
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_usart.h:1380:22:LL_USART_DisableSCLKOutput	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_usart.h:1409:22:LL_USART_SetStopBitsLength	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_usart.h:1834:22:LL_USART_SetHWFlowCtrl	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_usart.h:1992:22:LL_USART_SetBaudRate	2
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_bus.h:1344:22:LL_APB1_GRP1_ForceReset	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_bus.h:1426:22:LL_APB1_GRP1_ReleaseReset	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_bus.h:1800:22:LL_APB2_GRP1_ForceReset	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_bus.h:1841:22:LL_APB2_GRP1_ReleaseReset	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Src/stm32l4xx_ll_usart.c:145:13:LL_USART_DeInit	3
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Src/stm32l4xx_ll_usart.c:220:13:LL_USART_Init	6
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Src/stm32l4xx_ll_usart.c:346:6:LL_USART_StructInit	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Src/stm32l4xx_ll_usart.c:375:13:LL_USART_ClockInit	3
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Src/stm32l4xx_ll_usart.c:455:6:LL_USART_ClockStructInit	1

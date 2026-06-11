@@ -1,0 +1,7 @@
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Src/fat_fs_backend.c:10:17:fatfs_mount	2
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Src/fat_fs_backend.c:17:17:fatfs_open	2
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Src/fat_fs_backend.c:25:17:fatfs_write	3
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Src/fat_fs_backend.c:35:17:fatfs_read	3
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Src/fat_fs_backend.c:45:17:fatfs_sync	2
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Src/fat_fs_backend.c:51:17:fatfs_close	2
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Src/fat_fs_backend.c:57:17:fatfs_umount	2

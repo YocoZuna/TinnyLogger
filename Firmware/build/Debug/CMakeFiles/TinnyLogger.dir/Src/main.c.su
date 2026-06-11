@@ -1,0 +1,8 @@
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_bus.h:563:22:LL_AHB2_GRP1_EnableClock	24	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_gpio.h:496:22:LL_GPIO_SetPinPull	40	static,ignoring_inline_asm
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Inc/platform.h:27:20:P_init_SD_SPI	72	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Inc/platform.h:61:20:P_init_time_base	8	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Inc/platform.h:64:20:P_init_FPU	8	static,ignoring_inline_asm
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Inc/platform.h:72:20:P_init_I2CX	64	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/platform/Inc/platform.h:96:20:P_init_UART	72	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Src/main.c:31:5:main	168	static

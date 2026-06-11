@@ -1,0 +1,3 @@
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_bus.h:1344:22:LL_APB1_GRP1_ForceReset	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Inc/stm32l4xx_ll_bus.h:1426:22:LL_APB1_GRP1_ReleaseReset	1
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Drivers/STM32L4xx_HAL/Src/stm32l4xx_ll_pwr.c:55:13:LL_PWR_DeInit	1

@@ -1,0 +1,5 @@
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Src/logger.c:13:17:logger_init	16	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Src/logger.c:23:17:logger_deinit	16	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Src/logger.c:35:17:logger_write	32	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Src/logger.c:46:17:logger_printf	540	static
+/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/Src/logger.c:64:24:logger_flush	16	static
