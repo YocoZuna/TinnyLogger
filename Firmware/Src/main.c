@@ -21,6 +21,7 @@
 #include <stdint.h>
 
 #include "Sensors/AHT20/Inc/AHT20.h"
+#include "console_fs_backend.h"
 #include "platform.h"
 #include "logger.h"
 #include <string.h>
@@ -28,23 +29,29 @@
 #include <uart.h>
 #include "AHT20.h"
 #include "i2c.h"
+extern const logger_backend_t console_backend;
 int main(void)
 {
 
 
     P_init_FPU();
     P_init_time_base();
-    P_init_SD_SPI();
     P_init_I2CX();
-    P_init_UART();
-
-    struct AHT20 sensor;
-    AHT20_Create(&sensor, NULL,NULL,NULL);
-    AHT20_Init(&sensor);
+    console_fs_storage_t console_storage;
+    console_storage.file = CONSOLE_UART;
+    logger_t logger;
+    logger.backend = &console_backend;
+    logger.storage = &console_storage;
+    logger.logger_ready = false;
+    logger_init(&logger);
+    
+    //struct AHT20 sensor;
+    //AHT20_Create(&sensor, NULL,NULL,NULL);
+    //AHT20_Init(&sensor);
     
     while (1)
     {
-    
+        /*
         AHT20_ReadTempAndHum(&sensor);
         AHT20_CalcTemp(&sensor);
         AHT20_CalcTHumid(&sensor);
@@ -54,8 +61,9 @@ int main(void)
         for(size_t i=0;i<strlen(buffer);i++){
             uart_tx_byte(CONSOLE_UART, buffer[i]);
         }
+        */
         // Alternatively, you can use uart_tx_string if available
-
+        logger_printf(&logger, "[LOG] Helo, from Console Logger!\n");
         time_1ms_delay(1000); // Delay for 1 second
         // Main loop can be used for other tasks
     }

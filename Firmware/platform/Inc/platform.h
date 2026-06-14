@@ -126,3 +126,5 @@ static inline void P_init_UART() {
 
     uart_init(CONSOLE_UART, &uart_init_struct);
 }
+
+static inline void P_deinit_UART(){}

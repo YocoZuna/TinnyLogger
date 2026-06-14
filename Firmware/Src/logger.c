@@ -16,6 +16,7 @@ logger_status_t logger_init(logger_t* logger)
         return LOG_ERR_INVALID_PARAM;
     }
     logger->backend->mount(logger->storage);
+    logger->backend->open(logger->storage, "log.txt", FA_WRITE | FA_OPEN_ALWAYS);
     logger->logger_ready = true;
     return LOG_OK;
 
