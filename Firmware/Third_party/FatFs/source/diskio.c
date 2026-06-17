@@ -205,8 +205,8 @@ DRESULT disk_ioctl (
 	void *buff		/* Buffer to send/receive control data */
 )
 {
-	DRESULT res;
-	int result;
+	DRESULT res = RES_PARERR;
+
 
 	switch (pdrv) {
 	case DEV_FLASH :
