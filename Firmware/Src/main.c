@@ -45,26 +45,20 @@ int main(void)
     logger.logger_ready = false;
     logger_init(&logger);
     
-    //struct AHT20 sensor;
-    //AHT20_Create(&sensor, NULL,NULL,NULL);
-    //AHT20_Init(&sensor);
+    struct AHT20 sensor;
+    AHT20_Create(&sensor, NULL,NULL,NULL);
+    AHT20_Init(&sensor);
     
     while (1)
     {
-        /*
+        
         AHT20_ReadTempAndHum(&sensor);
         AHT20_CalcTemp(&sensor);
         AHT20_CalcTHumid(&sensor);
-        char buffer[100];
-        snprintf(buffer, sizeof(buffer), "Temperature: %.2f C, Humidity: %.2f %%\n", sensor.tempC, sensor.humidPercent);
-        
-        for(size_t i=0;i<strlen(buffer);i++){
-            uart_tx_byte(CONSOLE_UART, buffer[i]);
-        }
-        */
-        // Alternatively, you can use uart_tx_string if available
-        logger_printf(&logger, "[LOG] Helo, from Console Logger!\n");
+
+
+        logger_printf(&logger, "[LOG] Temperature: %.2f C, Humidity: %.2f %%\n", sensor.tempC, sensor.humidPercent);
         time_1ms_delay(1000); // Delay for 1 second
-        // Main loop can be used for other tasks
+
     }
 }
