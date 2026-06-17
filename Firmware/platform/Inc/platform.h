@@ -80,7 +80,7 @@ static inline void P_init_I2CX() {
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
     GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
     GPIO_InitStruct.Alternate = LL_GPIO_AF_4; // AF4 for I2C1
-    LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
     LL_I2C_InitTypeDef i2c_init_struct = {
         .OwnAddress1 = 0,

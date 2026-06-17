@@ -12,20 +12,25 @@ void i2c_init(I2C_TypeDef *I2C, LL_I2C_InitTypeDef *i2c_init_struct)
     LL_I2C_Enable(I2C);
 }
 
-void i2c_tx_byte(I2C_TypeDef *I2C,const uint8_t slaveAddr,const uint8_t memAddr, const uint8_t data){
+void i2c_tx(I2C_TypeDef *I2C,const uint8_t slaveAddr, const uint8_t *data,size_t len){
     
-    while(!LL_I2C_IsActiveFlag_BUSY(I2C));
-    LL_I2C_HandleTransfer(I2C, slaveAddr,LL_I2C_ADDRSLAVE_7BIT, sizeof(data),LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_START_WRITE);
-    while(!LL_I2C_IsActiveFlag_TXIS(I2C));
-    LL_I2C_TransmitData8(I2C, data);
+    while(LL_I2C_IsActiveFlag_BUSY(I2C));
+    LL_I2C_HandleTransfer(I2C, slaveAddr<<1,LL_I2C_ADDRSLAVE_7BIT, len,LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_START_WRITE);
+    for(size_t i=0;i<len;i++){
+        while(!LL_I2C_IsActiveFlag_TXIS(I2C));
+        LL_I2C_TransmitData8(I2C, data[i]);
+    }
     while(!LL_I2C_IsActiveFlag_STOP(I2C));
     LL_I2C_ClearFlag_STOP(I2C);
 }
-void i2c_rx_byte(I2C_TypeDef *I2C,const uint8_t slaveAddr, const uint8_t memAddr, uint8_t * data){
-    while(!LL_I2C_IsActiveFlag_BUSY(I2C));
-    LL_I2C_HandleTransfer(I2C, slaveAddr,LL_I2C_ADDRSLAVE_7BIT, sizeof(data),LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_START_READ);
-    while(!LL_I2C_IsActiveFlag_RXNE(I2C));
-    *data = LL_I2C_ReceiveData8(I2C);
+
+void i2c_rx(I2C_TypeDef *I2C,const uint8_t slaveAddr, uint8_t * data, size_t len){
+    while(LL_I2C_IsActiveFlag_BUSY(I2C));
+    LL_I2C_HandleTransfer(I2C, slaveAddr<<1,LL_I2C_ADDRSLAVE_7BIT, len,LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_START_READ);
+    for(size_t i=0;i<len;i++){
+        while(!LL_I2C_IsActiveFlag_RXNE(I2C));
+        data[i] = LL_I2C_ReceiveData8(I2C);
+    }
     while(!LL_I2C_IsActiveFlag_STOP(I2C));
     LL_I2C_ClearFlag_STOP(I2C);
 }

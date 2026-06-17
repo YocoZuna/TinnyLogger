@@ -11,13 +11,16 @@ AHT20_Status_t itf_AHT20_delay(uint32_t ms)
 
 AHT20_Status_t itf_AHT20_read(uint8_t deviceAddres,uint8_t* data,uint8_t len)
 {
-    i2c_rx_byte(I2C_PORT, deviceAddres, 0, data);
+    i2c_rx(I2C_PORT, deviceAddres, data, len);
+
     return AHT20_OK;
 }
 
 AHT20_Status_t itf_AHT20_write(uint8_t deviceAddres,uint8_t* data,uint8_t len)
 {
-    i2c_tx_byte(I2C_PORT, deviceAddres, 0, *data);
+    
+    i2c_tx(I2C_PORT, deviceAddres, data,len);
+    
     
        
     
