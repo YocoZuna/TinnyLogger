@@ -7,6 +7,7 @@
 
 
 __IO uint32_t mTick = 0;
+
 void timeInit()
 {
     LL_Init1msTick(4000000); // Assuming HCLK is 4 MHz, adjust if different
@@ -19,4 +20,10 @@ uint32_t getTime()
 void time_1ms_delay(const uint32_t delay)
 {
     LL_mDelay(delay);
+}
+
+int8_t time_expired(uint32_t *start_time, uint32_t timeout)
+{
+    return getTime() - *start_time >= timeout ? 1 : 0;
+
 }
