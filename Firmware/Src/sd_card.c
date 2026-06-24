@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
+
 #define TIMEOUT 10
 
 static uint8_t response_R1;
@@ -24,6 +25,7 @@ static bool sd_write_single_block(const uint8_t* buff,size_t len);
 static bool sd_write_multiple_blocks(uint32_t sector_addr, const uint8_t* buff, size_t count);
 int SD_disk_status()
 {
+    //TODO: Implement SD card status check
     return 0;
 }
 int SD_card_init(){
@@ -43,7 +45,7 @@ int SD_card_init(){
     //TODO Add handling for v1 and MMC
 
     for(uint8_t i=0;i<sizeof(response_R7_R3);i++){
-        spi_rx_byte(SD_SPI, &response_R7_R3[i]);
+        spi_rx_byte(SD_SPI, &response_R7_R3[i],TIMEOUT);
     }
 
     if (response_R7_R3[2] != 0x01 || response_R7_R3[3] != 0xAA) {
@@ -65,7 +67,7 @@ int SD_card_init(){
     SD_card_send_command(CMD58, 0);  // Argument 0 dla CMD58
 
     for(uint8_t i=0;i<sizeof(response_R7_R3);i++){
-        spi_rx_byte(SD_SPI, &response_R7_R3[i]);
+        spi_rx_byte(SD_SPI, &response_R7_R3[i],TIMEOUT);
     }
     sd_deselect();
 
@@ -87,12 +89,12 @@ int SD_card_send_command(uint8_t cmd, uint32_t arg)
     // Calculate CRC for CMD0 and CMD8, otherwise use dummy CRC
     command_packet[5] = (cmd == CMD0) ? SD_CMD0_CRC : (cmd == CMD8) ? SD_CMD8_CRC : SD_DUMMY_CRC;
 
-    spi_tx_rx(SD_SPI, command_packet, NULL, CMD_SIZE);
+    spi_tx_rx(SD_SPI, command_packet, NULL, CMD_SIZE, TIMEOUT);
 
-    if(cmd==CMD12) spi_rx_byte(SD_SPI, response_buffer);
+    if(cmd==CMD12) spi_rx_byte(SD_SPI, response_buffer,TIMEOUT);
     do{
         
-        spi_rx_byte(SD_SPI, &response);
+        spi_rx_byte(SD_SPI, &response,TIMEOUT);
     }while(response&0x80);
 
     return response;
@@ -125,7 +127,7 @@ static bool sd_read_single_block(uint8_t* buff,size_t len)
     uint8_t token;
 
     do{
-        spi_rx_byte(SD_SPI, &token);
+        spi_rx_byte(SD_SPI, &token,TIMEOUT);
         
     }while(token==0xFF && retires--);
     
@@ -134,11 +136,11 @@ static bool sd_read_single_block(uint8_t* buff,size_t len)
     uint8_t dummy_buff[512];
     memset(dummy_buff,SD_DUMMY_BYTE,SD_SECTOR_SIZE);
 
-    spi_tx_rx(SD_SPI, dummy_buff, buff, SD_SECTOR_SIZE);
+    spi_tx_rx(SD_SPI, dummy_buff, buff, SD_SECTOR_SIZE, TIMEOUT);
 
     //We can ommit CRC for now :D 
-    spi_rx_byte(SD_SPI, &token);
-    spi_rx_byte(SD_SPI, &token);
+    spi_rx_byte(SD_SPI, &token,TIMEOUT);
+    spi_rx_byte(SD_SPI, &token,TIMEOUT);
 
     return true;
 }
@@ -148,24 +150,24 @@ static bool sd_write_single_block(const uint8_t* buff, size_t len) {
     uint8_t res;
 
     do {
-        spi_rx_byte(SD_SPI, &res);
+        spi_rx_byte(SD_SPI, &res,TIMEOUT);
     } while (res != 0xFF);
 
-    spi_tx_byte(SD_SPI, 0xFE);
+    spi_tx_byte(SD_SPI, 0xFE,TIMEOUT);
 
-    spi_tx_rx(SD_SPI, buff, NULL, len); 
+    spi_tx_rx(SD_SPI, buff, NULL, len,TIMEOUT); 
 
-    spi_tx_byte(SD_SPI, 0xFF);
-    spi_tx_byte(SD_SPI, 0xFF);
+    spi_tx_byte(SD_SPI, 0xFF,TIMEOUT);
+    spi_tx_byte(SD_SPI, 0xFF,TIMEOUT);
 
     // 5. Odbierz Data Response Token
-    spi_rx_byte(SD_SPI, &res);
+    spi_rx_byte(SD_SPI, &res,TIMEOUT);
     if ((res & 0x1F) != 0x05) {
         return false; 
     }
 
     do {
-        spi_rx_byte(SD_SPI, &res);
+        spi_rx_byte(SD_SPI, &res,TIMEOUT);
     } while (res == 0x00);
 
     return true;
@@ -178,28 +180,28 @@ static bool sd_write_multiple_blocks(uint32_t sector_addr, const uint8_t*  buff,
 
     for (size_t i = 0; i < count; i++) {
         do {
-            spi_rx_byte(SD_SPI, &res);
+            spi_rx_byte(SD_SPI, &res,TIMEOUT);
         } while (res != 0xFF);
 
-        spi_tx_byte(SD_SPI, 0xFC);
+        spi_tx_byte(SD_SPI, 0xFC,TIMEOUT);
 
-        spi_tx_rx(SD_SPI, &buff[i * 512], NULL, 512);
+        spi_tx_rx(SD_SPI, &buff[i * 512], NULL, 512,TIMEOUT);
 
-        spi_tx_byte(SD_SPI, 0xFF);
-        spi_tx_byte(SD_SPI, 0xFF);
+        spi_tx_byte(SD_SPI, 0xFF,TIMEOUT);
+        spi_tx_byte(SD_SPI, 0xFF,TIMEOUT);
 
-        spi_rx_byte(SD_SPI, &res);
+        spi_rx_byte(SD_SPI, &res,TIMEOUT);
         if ((res & 0x1F) != 0x05) return false; // Błąd zapisu bloku
         
         do {
-            spi_rx_byte(SD_SPI, &res);
+            spi_rx_byte(SD_SPI, &res,TIMEOUT);
         } while (res == 0x00);
     }
 
-    spi_tx_byte(SD_SPI, 0xFD);
+    spi_tx_byte(SD_SPI, 0xFD,TIMEOUT);
 
     do {
-        spi_rx_byte(SD_SPI, &res);
+        spi_rx_byte(SD_SPI, &res,TIMEOUT);
     } while (res == 0x00);
 
     return true;
@@ -225,7 +227,7 @@ static void sd_delay(uint32_t ms){
 }
 static void sd_deselect(){
     spi_deselect(CS_PORT, CS_PIN);
-    spi_tx_byte(SD_SPI, 0xFF);
+    spi_tx_byte(SD_SPI, 0xFF,TIMEOUT);
 }
 static void sd_select(){
     spi_select(CS_PORT, CS_PIN);
@@ -241,7 +243,7 @@ static void sd_power_on(){
     // Send 15*8 dummy clocks to initialize the SD card
     for(int i=0;i<DUMMY_CLOCKS;i++)
     {
-       spi_tx_byte(SD_SPI, SD_DUMMY_BYTE); 
+       spi_tx_byte(SD_SPI, SD_DUMMY_BYTE,TIMEOUT); 
     }
     sd_select();
     

@@ -1,6 +1,8 @@
 #pragma once
 
 
+#include <sd_commands.h>
+#include "stm32l4xx_ll_bus.h"
 #include "stm32l4xx_ll_spi.h"
 #include "stm32l4xx_ll_bus.h"
 #include "stm32l4xx_ll_gpio.h"
@@ -28,7 +30,7 @@ void spi_init(SPI_TypeDef*SPIx,LL_SPI_InitTypeDef* spi_init_struct);
     * @param timeout: Timeout value for the operation.
     * @return void indicating success or failure of the operation.
 */
-void spi_tx_rx( SPI_TypeDef*SPIx, const uint8_t* tx_buffer, uint8_t* rx_buffer, size_t size);
+int8_t spi_tx_rx( SPI_TypeDef*SPIx, const uint8_t* tx_buffer, uint8_t* rx_buffer, size_t size,uint32_t timeout);
 /*
     * @brief Transmits data over SPI. This function sends data from the tx_buffer.
     *
@@ -38,7 +40,7 @@ void spi_tx_rx( SPI_TypeDef*SPIx, const uint8_t* tx_buffer, uint8_t* rx_buffer, 
     * @param timeout: Timeout value for the operation.
     * @return void indicating success or failure of the operation.
 */
-void spi_tx_byte( SPI_TypeDef*SPIx, const uint8_t data);
+int8_t spi_tx_byte( SPI_TypeDef*SPIx, const uint8_t data,uint32_t timeout);
 /*
     * @brief Receives data over SPI. This function receives data into the rx_buffer.
     *
@@ -48,7 +50,7 @@ void spi_tx_byte( SPI_TypeDef*SPIx, const uint8_t data);
     * @param timeout: Timeout value for the operation.
     * @return void indicating success or failure of the operation.
 */
-void spi_rx_byte( SPI_TypeDef*SPIx, uint8_t* rx_buffer);
+int8_t spi_rx_byte( SPI_TypeDef*SPIx, uint8_t* rx_buffer,uint32_t timeout);
 /*
     * @brief Deinitializes the SPI peripheral.
     *
@@ -69,4 +71,3 @@ void spi_select(GPIO_TypeDef* GPIOx, uint32_t Pin);
     * @param Pin: Specifies the GPIO pin number used for slave select (e.g., LL_GPIO_PIN_0).
 */
 void spi_deselect(GPIO_TypeDef* GPIOx, uint32_t Pin);
-

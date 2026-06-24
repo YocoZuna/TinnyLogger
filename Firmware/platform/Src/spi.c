@@ -17,43 +17,98 @@ void spi_init( SPI_TypeDef*SPIx,LL_SPI_InitTypeDef* spi_init_struct)
     LL_SPI_Enable(SPIx);
 }
 
-void spi_tx_rx( SPI_TypeDef*SPIx, const uint8_t* tx_buffer, uint8_t* rx_buffer, size_t size)
+int8_t spi_tx_rx( SPI_TypeDef*SPIx, const uint8_t* tx_buffer, uint8_t* rx_buffer, size_t size,uint32_t timeout)
 {
     uint8_t recv;
+    __IO uint32_t start_time = getTime();
     for (size_t i = 0; i < size; i++) {
-        while (!LL_SPI_IsActiveFlag_TXE(SPIx));
-        LL_SPI_TransmitData8(SPIx, tx_buffer[i]);
+        while (!LL_SPI_IsActiveFlag_TXE(SPIx)){
+            if(getTime() - start_time >= timeout) {
+                return -1;
+            }
+        };
 
-        while (!LL_SPI_IsActiveFlag_RXNE(SPIx));
+        LL_SPI_TransmitData8(SPIx, tx_buffer[i]);
+        start_time = getTime();
+
+        while (!LL_SPI_IsActiveFlag_RXNE(SPIx)&& (getTime() - start_time) < timeout){
+            if(getTime() - start_time >= timeout) {
+                return -1; 
+            }
+        }
+        
         recv=LL_SPI_ReceiveData8(SPIx); // discard
+
         if(rx_buffer!=NULL) rx_buffer[i]=recv;
 
-        while (LL_SPI_IsActiveFlag_BSY(SPIx));
+        start_time = getTime();
+        while (LL_SPI_IsActiveFlag_BSY(SPIx)){
+            if(getTime() - start_time >= timeout) {
+                return -1; 
+            }
+        };
     }
+
+    return 0;
 }
 
-void spi_tx_byte(SPI_TypeDef *SPIx, const uint8_t data) {
+int8_t spi_tx_byte(SPI_TypeDef *SPIx, const uint8_t data,uint32_t timeout) {
 
-    while (!LL_SPI_IsActiveFlag_TXE(SPIx));
+    __IO uint32_t start_time = getTime();
+    while (!LL_SPI_IsActiveFlag_TXE(SPIx)){
+        if(getTime() - start_time >= timeout) {
+            return -1; 
+        }
+    }
+
     LL_SPI_TransmitData8(SPIx, data);
 
-    while (!LL_SPI_IsActiveFlag_RXNE(SPIx));
+    start_time = getTime();
+    while (!LL_SPI_IsActiveFlag_RXNE(SPIx)){
+        if(getTime() - start_time >= timeout) {
+            return -1; 
+        }
+    }
+
     (void)LL_SPI_ReceiveData8(SPIx); // discard
 
+    start_time = getTime();
+    while (LL_SPI_IsActiveFlag_BSY(SPIx)){
+        if(getTime() - start_time >= timeout) {
+            return -1; 
+        }
+    };
 
-    while (LL_SPI_IsActiveFlag_BSY(SPIx));
+    return 0;
 }
 
-void spi_rx_byte(SPI_TypeDef *SPIx, uint8_t *data) {
+int8_t spi_rx_byte(SPI_TypeDef *SPIx, uint8_t *data,uint32_t timeout) {
 
-    while (!LL_SPI_IsActiveFlag_TXE(SPIx));
+    __IO uint32_t start_time = getTime();
+    while (!LL_SPI_IsActiveFlag_TXE(SPIx)){
+        if(getTime() - start_time >= timeout) {
+            return -1; 
+        }
+    };
+
     LL_SPI_TransmitData8(SPIx, 0xFF); // dummy
 
-    while (!LL_SPI_IsActiveFlag_RXNE(SPIx));
+    start_time = getTime();
+    while (!LL_SPI_IsActiveFlag_RXNE(SPIx)){
+        if(getTime() - start_time >= timeout) {
+            return -1; 
+        }
+    }
+
     *data = LL_SPI_ReceiveData8(SPIx);
     
-
-    while (LL_SPI_IsActiveFlag_BSY(SPIx));
+    start_time = getTime();
+    while (LL_SPI_IsActiveFlag_BSY(SPIx)){
+        if(getTime() - start_time >= timeout) {
+            return -1; 
+        }
+    };
+    return 0;
 }
 void spi_deinit(SPI_TypeDef*SPIx)
 {
