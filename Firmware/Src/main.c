@@ -29,7 +29,7 @@
 #include <uart.h>
 #include "AHT20.h"
 #include "i2c.h"
-extern const logger_backend_t console_backend;
+extern const logger_backend_t fat_fs_backend;
 int main(void)
 {
 
@@ -37,11 +37,10 @@ int main(void)
     P_init_FPU();
     P_init_time_base();
     P_init_I2CX();
-    console_fs_storage_t console_storage;
-    console_storage.file = CONSOLE_UART;
+    fat_fs_storage_t fat_storage;
     logger_t logger;
-    logger.backend = &console_backend;
-    logger.storage = &console_storage;
+    logger.backend = &fat_fs_backend;
+    logger.storage = &fat_storage;
     logger.logger_ready = false;
     logger_init(&logger);
     
