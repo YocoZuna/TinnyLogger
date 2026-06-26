@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 
-
+#ifdef USE_CRC
 static uint8_t AHT20_CalcCRC(const uint8_t* data, uint8_t len)
 {
     uint8_t initalValue = 0xFFu;
@@ -20,6 +20,7 @@ static uint8_t AHT20_CalcCRC(const uint8_t* data, uint8_t len)
     }
     return initalValue;
 }
+#endif 
 
 STATIC_TESTABLE AHT20_Status_t getStatusRegister(struct AHT20* handle,uint8_t* status)
 {
@@ -70,18 +71,11 @@ AHT20_Status_t AHT20_Create(struct AHT20* handle,
                     SENSOR_write_t write)
 {
 
+    AHT20_Status_t status = AHT20_RegisterHooks(handle,delay,read,write);
+    if (status != AHT20_OK) {
+        return status;
+    }
 
-    if (delay== NULL || read == NULL || write == NULL) {
-        handle->interface.delay = itf_AHT20_delay;
-        handle->interface.read = itf_AHT20_read;
-        handle->interface.write = itf_AHT20_write;
-    }
-    else {
-         AHT20_Status_t status = AHT20_RegisterHooks(handle,delay,read,write);
-        if (status != AHT20_OK) {
-            return status;
-        }
-    }
     handle->humidPercent = 0;
     handle->humidRaw = 0;
     handle->tempC = 0;
@@ -116,11 +110,9 @@ AHT20_Status_t AHT20_Init(struct AHT20* sensor_handle)
     sensor_handle->interface.delay(40);
     uint8_t status = 0;
     ret = getStatusRegister(sensor_handle,&status);
-    ret  = calibrateSensor(sensor_handle);
-    //printf("Elcuacabra");
+
     if (ret!=AHT20_OK)
     {
-        // Sensor is not calibrated, we need to calibrate it    
         return ret;
     }
     
@@ -131,7 +123,7 @@ AHT20_Status_t AHT20_Init(struct AHT20* sensor_handle)
         {
             return ret;
         }
-        return ret;
+        
     }
     
     return ret;

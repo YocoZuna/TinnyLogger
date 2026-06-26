@@ -29,6 +29,8 @@
 #include <uart.h>
 #include "AHT20.h"
 #include "i2c.h"
+#include "sensors.h"
+
 extern const logger_backend_t fat_fs_backend;
 int main(void)
 {
@@ -45,7 +47,7 @@ int main(void)
     logger_init(&logger);
     
     struct AHT20 sensor;
-    AHT20_Create(&sensor, NULL,NULL,NULL);
+    AHT20_Create(&sensor, itf_AHT20_delay,itf_AHT20_read,itf_AHT20_write);
     AHT20_Init(&sensor);
     
     while (1)
