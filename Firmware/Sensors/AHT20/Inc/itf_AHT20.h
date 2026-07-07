@@ -5,7 +5,7 @@
 #include "AHT20_typedefs.h"
 typedef struct itf_AHT20 itf_AHT20_t;
 
-typedef AHT20_Status_t(*SENSOR_delay_t)(uint32_t ms);
+typedef void(*SENSOR_delay_t)(uint32_t ms);
 typedef AHT20_Status_t(*SENSOR_read_t)(uint8_t deviceAddres,uint8_t* data,uint8_t len);
 typedef AHT20_Status_t(*SENSOR_write_t)(uint8_t deviceAddres,uint8_t* data,uint8_t len);
 

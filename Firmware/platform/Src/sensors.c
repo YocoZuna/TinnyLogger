@@ -6,10 +6,10 @@
 
 #define TIMEOUT 1000
 
-AHT20_Status_t itf_AHT20_delay(uint32_t ms)
+void itf_AHT20_delay(uint32_t ms)
 {
     time_1ms_delay(ms);
-    return AHT20_OK;
+
 }
 
 AHT20_Status_t itf_AHT20_read(uint8_t deviceAddres,uint8_t* data,uint8_t len)
