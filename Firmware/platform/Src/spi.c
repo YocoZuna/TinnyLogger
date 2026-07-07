@@ -31,7 +31,7 @@ int8_t spi_tx_rx( SPI_TypeDef*SPIx, const uint8_t* tx_buffer, uint8_t* rx_buffer
         LL_SPI_TransmitData8(SPIx, tx_buffer[i]);
         start_time = getTime();
 
-        while (!LL_SPI_IsActiveFlag_RXNE(SPIx)&& (getTime() - start_time) < timeout){
+        while (!LL_SPI_IsActiveFlag_RXNE(SPIx)){
             if(getTime() - start_time >= timeout) {
                 return -1; 
             }
