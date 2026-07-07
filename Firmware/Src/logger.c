@@ -15,6 +15,8 @@ logger_status_t logger_init(logger_t* logger)
     if (logger == NULL || logger->backend == NULL || logger->storage == NULL) {
         return LOG_ERR_INVALID_PARAM;
     }
+
+    //TODO: Think how to encapsulate open for FATFs and where to define filename
     logger->backend->mount(logger->storage);
     logger->backend->open(logger->storage, "log.txt", FA_WRITE | FA_OPEN_ALWAYS);
     logger->logger_ready = true;
