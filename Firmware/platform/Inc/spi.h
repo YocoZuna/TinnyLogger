@@ -1,6 +1,7 @@
 #pragma once
+#include "stm32l432xx.h"
 #include "stm32l4xx_hal_spi.h"
-
+#include "stm32l4xx_hal_gpio.h"
 #define CS_PIN LL_GPIO_PIN_11
 #define CS_PORT GPIOA
 
@@ -13,13 +14,14 @@ typedef enum
   SPI_TIMEOUT  = 0x03
 } SPI_StatusTypeDef;
 
-SPI_StatusTypeDef spi_init(SPI_HandleTypeDef*SPIx,HAL_SPI_InitTypeDef* spi_init_struct);
+
+SPI_StatusTypeDef spi_init(SPI_HandleTypeDef* hspi,SPI_TypeDef* SPIx,SPI_InitTypeDef* spi_init_struct);
 
 SPI_StatusTypeDef spi_tx_rx( SPI_HandleTypeDef*SPIx, const uint8_t* tx_buffer, uint8_t* rx_buffer, size_t size,uint32_t timeout);
 
-SPI_StatusTypeDef spi_tx_byte( SPI_HandleTypeDef*SPIx, const uint8_t* data,size_t len,uint32_t timeout);
+SPI_StatusTypeDef spi_tx( SPI_HandleTypeDef*SPIx, const uint8_t* data,size_t len,uint32_t timeout);
 
-SPI_StatusTypeDef spi_rx_byte( SPI_HandleTypeDef*SPIx, uint8_t* rx_buffer,size_t len,uint32_t timeout);
+SPI_StatusTypeDef spi_rx( SPI_HandleTypeDef*SPIx, uint8_t* rx_buffer,size_t len,uint32_t timeout);
 
 SPI_StatusTypeDef spi_deinit(SPI_HandleTypeDef*SPIx);
 

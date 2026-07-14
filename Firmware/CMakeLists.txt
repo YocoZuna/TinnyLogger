@@ -43,9 +43,9 @@ set(cpu_PARAMS
 )
 
 
-file(GLOB AHT20_SRCS
-    ${CMAKE_CURRENT_SOURCE_DIR}/Sensors/AHT20/Src/*.c
-)
+#file(GLOB AHT20_SRCS
+#    ${CMAKE_CURRENT_SOURCE_DIR}/Sensors/AHT20/Src/*.c
+#)
 
 file(GLOB HAL_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32L4xx_HAL/Src/*.c
@@ -69,7 +69,7 @@ set(sources_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/stm32l4xx_it.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/sysmem.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/system_stm32l4xx.c
-    ${AHT20_SRCS}
+    #${AHT20_SRCS}
 
 )
 
@@ -81,7 +81,7 @@ set(include_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32L4xx_HAL/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/Third_party/FatFs/source
     ${CMAKE_CURRENT_SOURCE_DIR}/platform/Inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/Sensors/AHT20/Inc
+    #${CMAKE_CURRENT_SOURCE_DIR}/Sensors/AHT20/Inc
 )
 
 # Include directories for each compiler
@@ -158,7 +158,6 @@ target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE
     -Wextra
     -Wpedantic
     -Wno-unused-parameter
-    -fanalyzer
     $<$<COMPILE_LANGUAGE:C>: >
     $<$<COMPILE_LANGUAGE:CXX>:
 

@@ -27,7 +27,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <uart.h>
-#include "AHT20.h"
 #include "i2c.h"
 #include "sensors.h"
 
@@ -46,19 +45,19 @@ int main(void)
     logger.logger_ready = false;
     logger_init(&logger);
     
-    struct AHT20 sensor;
-    AHT20_Create(&sensor, itf_AHT20_delay,itf_AHT20_read,itf_AHT20_write);
-    AHT20_Init(&sensor);
+    //struct AHT20 sensor;
+    //AHT20_Create(&sensor, itf_AHT20_delay,itf_AHT20_read,itf_AHT20_write);
+    //AHT20_Init(&sensor);
     
     while (1)
     {
         
-        AHT20_ReadTempAndHum(&sensor);
-        AHT20_CalcTemp(&sensor);
-        AHT20_CalcTHumid(&sensor);
+        //AHT20_ReadTempAndHum(&sensor);
+        //AHT20_CalcTemp(&sensor);
+        //AHT20_CalcTHumid(&sensor);
 
 
-        logger_printf(&logger, "[LOG] Temperature: %.2f C, Humidity: %.2f %%\n", sensor.tempC, sensor.humidPercent);
+        //logger_printf(&logger, "[LOG] Temperature: %.2f C, Humidity: %.2f %%\n", sensor.tempC, sensor.humidPercent);
         time_1ms_delay(1000); // Delay for 1 second
 
     }

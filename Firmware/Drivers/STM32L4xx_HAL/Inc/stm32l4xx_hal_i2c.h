@@ -26,7 +26,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l4xx_hal_def.h"
-
+#include "stm32l4xx_hal_dma.h"
 /** @addtogroup STM32L4xx_HAL_Driver
   * @{
   */
