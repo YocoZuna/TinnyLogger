@@ -26,6 +26,7 @@ enable_language(C CXX ASM)
 message("Build type: " ${CMAKE_BUILD_TYPE})
 add_compile_definitions(-DSTM32L432xx)
 add_compile_definitions(-DUSE_FULL_LL_DRIVER)
+add_compile_definitions(-DUSE_FULL_HAL_DRIVER)
 # Setup compiler settings
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
