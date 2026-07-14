@@ -251,7 +251,9 @@ static void sd_power_on(){
     // Send 15*8 dummy clocks to initialize the SD card
     for(int i=0;i<DUMMY_CLOCKS;i++)
     {
-       SD_spi_tx_byte(SD_DUMMY_BYTE,sizeof(uint8_t),TIMEOUT); 
+       if(SD_spi_tx_byte(SD_DUMMY_BYTE,sizeof(SD_DUMMY_BYTE),TIMEOUT)!=SPI_OK) {
+           return ;
+       }
     }
     SD_select();
     

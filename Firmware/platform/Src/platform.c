@@ -1,4 +1,5 @@
 #include "platform.h"
+#include "stm32l4xx_hal_gpio.h"
 
 
 SPI_HandleTypeDef SD_CARD_SPI;
@@ -30,12 +31,11 @@ void P_init_SD_SPI(){
     GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
-        GPIO_InitStruct.Pin = MOSI_PIN | MISO_PIN | SCK_PIN;
+    memset((void*)&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
+    GPIO_InitStruct.Pin = CS_PIN;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
     if(spi_init(&SD_CARD_SPI, SPI3, &spi) != SPI_OK) {
