@@ -10,6 +10,7 @@ uint8_t SD_DUMMY_BYTE[] = {0xFFU};
 
 static uint8_t response_R1;
 static uint8_t response_R7_R3[4];
+static uint8_t dummy_buff[512];
 extern SPI_HandleTypeDef SD_CARD_SPI;
 
 static void sd_power_on();
@@ -108,7 +109,7 @@ int SD_card_send_command(uint8_t cmd, uint32_t arg)
     // Calculate CRC for CMD0 and CMD8, otherwise use dummy CRC
     command_packet[5] = (cmd == CMD0) ? SD_CMD0_CRC : (cmd == CMD8) ? SD_CMD8_CRC : SD_DUMMY_CRC;
 
-    SD_spi_tx_rx(command_packet, NULL, CMD_SIZE, TIMEOUT);
+    SD_spi_tx_rx(command_packet, response_buffer, CMD_SIZE, TIMEOUT);
 
     if(cmd==CMD12) SD_spi_rx_byte(response_buffer,1,TIMEOUT);
     do{
@@ -152,7 +153,6 @@ static bool sd_read_single_block(uint8_t* buff,size_t len)
     
     if(token!=0xFE) return false;
 
-    uint8_t dummy_buff[512];
     memset(dummy_buff,SD_DUMMY_BYTE[0],SD_SECTOR_SIZE);
 
     SD_spi_tx_rx(dummy_buff, buff, SD_SECTOR_SIZE, TIMEOUT);
@@ -174,7 +174,7 @@ static bool sd_write_single_block(const uint8_t* buff, size_t len) {
 
     SD_spi_tx_byte((uint8_t[]){0xFE},sizeof(res),TIMEOUT);
 
-    SD_spi_tx_rx(buff, NULL, len,TIMEOUT); 
+    SD_spi_tx_rx(buff, dummy_buff, len,TIMEOUT); 
 
     SD_spi_tx_byte((uint8_t[]){0xFF},1,TIMEOUT);
     SD_spi_tx_byte((uint8_t[]){0xFF},1,TIMEOUT);
@@ -204,7 +204,7 @@ static bool sd_write_multiple_blocks(uint32_t sector_addr, const uint8_t*  buff,
 
         SD_spi_tx_byte((uint8_t[]){0xFC},1,TIMEOUT);
 
-        SD_spi_tx_rx(&buff[i * 512], NULL, 512,TIMEOUT);
+        SD_spi_tx_rx(&buff[i * 512], dummy_buff, 512,TIMEOUT);
 
         SD_spi_tx_byte((uint8_t[]){0xFF},1,TIMEOUT);
         SD_spi_tx_byte((uint8_t[]){0xFF},1,TIMEOUT);
@@ -243,7 +243,6 @@ int SD_disk_write(const uint8_t* buff,uint32_t sector,int count){
 
 static void sd_power_on(){
 
-    sd_delay(1000); // Delay to allow SD card to power up and stabilize
 
     do{
     SD_deselect();
