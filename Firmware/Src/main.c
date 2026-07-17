@@ -38,7 +38,6 @@ int main(void)
     P_init_FPU();
     P_init_time_base();
     P_init_I2CX();
-    P_init_SD_SPI();
     fat_fs_storage_t fat_storage;
     logger_t logger;
     logger.backend = &fat_fs_backend;
@@ -52,14 +51,7 @@ int main(void)
     
     while (1)
     {
-        
-        //AHT20_ReadTempAndHum(&sensor);
-        //AHT20_CalcTemp(&sensor);
-        //AHT20_CalcTHumid(&sensor);
-
-
-        logger_printf(&logger, "Siema\n\r");
-        time_1ms_delay(1000); // Delay for 1 second
+        logger_printf(&logger, "Hello, world!\n");
 
     }
 }
