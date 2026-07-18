@@ -5,10 +5,6 @@
 #include <sys/types.h>
 #include "fat_fs_backend.h"
 
-
-
-
-
 typedef struct{
 
     logger_status_t (*mount)(void* storage);

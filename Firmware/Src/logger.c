@@ -1,6 +1,5 @@
 #include "logger.h"
-#include "diskio.h"
-#include "ff.h"
+#include "logger_status.h"
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -8,7 +7,7 @@
 
 
 static logger_status_t logger_flush(logger_t* logger);
-
+static logger_status_t logger_status = LOG_OK;
 
 logger_status_t logger_init(logger_t* logger)
 {
@@ -17,8 +16,10 @@ logger_status_t logger_init(logger_t* logger)
     }
 
     //TODO: Think how to encapsulate open for FATFs and where to define 
-    logger->backend->mount(logger->storage);
-    logger->backend->open(logger->storage, "log.txt", FA_WRITE | FA_OPEN_ALWAYS);
+    if((logger_status = logger->backend->mount(logger->storage))!=LOG_OK) return logger_status;
+    
+    if((logger_status = logger->backend->open(logger->storage, "log.txt", FA_WRITE | FA_OPEN_ALWAYS))!=LOG_OK) return logger_status;
+   
     logger->logger_ready = true;
     return LOG_OK;
 
@@ -29,20 +30,19 @@ logger_status_t logger_deinit(logger_t* logger){
     
     logger->logger_ready = false;
     if(logger_flush(logger)!=LOG_OK) return LOG_ERR_SYNC;
-    logger->backend->close(logger->storage);
-    logger->backend->umount(logger->storage);
+
+    if((logger_status = logger->backend->close(logger->storage))!=LOG_OK) return logger_status;
+
+    if((logger_status = logger->backend->umount(logger->storage))!=LOG_OK) return logger_status;
 
     return LOG_OK;
 }
 
 logger_status_t logger_write(logger_t* logger,const char* buffor,size_t len){
     
-    logger_status_t res;
-    
     if(!logger->logger_ready) return LOG_ERR_NOT_INITIALIZED;
     
-    res = logger->backend->write(logger->storage, buffor, len);
-    if(res!=LOG_OK) return LOG_ERR_WRITE;
+    if((logger_status=logger->backend->write(logger->storage, buffor, len))!=LOG_OK) return logger_status;
 
     return logger_flush(logger);
 }
