@@ -5,6 +5,8 @@
 #include "string.h"
 #include "platform.h"
 #include <stdbool.h>
+#include "ff.h"
+#include "diskio.h"
 
 #define SD_CMD0_CRC 0x95
 #define SD_CMD8_CRC 0x87
@@ -12,11 +14,14 @@
 #define DUMMY_CLOCKS 15
 #define CMD_SIZE 6
 #define SD_SECTOR_SIZE 512
-
 extern SPI_HandleTypeDef SD_CARD_SPI;
 
-int SD_card_init();
-int SD_disk_status();
-int SD_card_send_command(uint8_t cmd, uint32_t arg);
-int SD_disk_read(uint8_t* buff,uint32_t sector,int count);
-int SD_disk_write(const uint8_t* buff,uint32_t sector,int count);
+typedef enum{
+    SDSC = 0,
+    SDHC = 1
+}SD_cardtype_t;
+
+DSTATUS SD_card_init();
+DSTATUS SD_disk_status();
+DRESULT SD_disk_read(BYTE* buff, LBA_t sector, UINT count);
+DRESULT SD_disk_write(const BYTE* buff, LBA_t sector, UINT count);
