@@ -13,7 +13,7 @@ typedef struct{
     logger_status_t (*read)(void* storage,char* buffor,const size_t len);
     logger_status_t (*sync)(void* storage);
     logger_status_t (*close)(void* storage);
-    logger_status_t (*umount)(void* storage);
+    logger_status_t (*unmount)(void* storage);
 }logger_backend_t;
 
 typedef struct{

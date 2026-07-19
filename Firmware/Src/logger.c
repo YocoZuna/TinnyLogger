@@ -28,13 +28,14 @@ logger_status_t logger_deinit(logger_t* logger){
     
     if(!logger->logger_ready) return LOG_ERR_NOT_INITIALIZED;
     
-    logger->logger_ready = false;
+    
     if(logger_flush(logger)!=LOG_OK) return LOG_ERR_SYNC;
 
     if((logger_status = logger->backend->close(logger->storage))!=LOG_OK) return logger_status;
 
-    if((logger_status = logger->backend->umount(logger->storage))!=LOG_OK) return logger_status;
+    if((logger_status = logger->backend->unmount(logger->storage))!=LOG_OK) return logger_status;
 
+    logger->logger_ready = false;
     return LOG_OK;
 }
 
@@ -66,8 +67,6 @@ logger_status_t logger_printf(logger_t* logger, const char* format,...){
 }
 static logger_status_t logger_flush(logger_t* logger){
     
-    if(!logger->logger_ready) return LOG_ERR_NOT_INITIALIZED;
-
     if(logger->backend->sync(logger->storage)!=LOG_OK) return LOG_ERR_SYNC;
     
     return LOG_OK;

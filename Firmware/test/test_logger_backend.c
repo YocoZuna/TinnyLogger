@@ -103,5 +103,5 @@ void test_fatfs_backend_umount_Failed(void)
 {
     f_mount_ExpectAndReturn(0,FF_VOLUME,0, FR_DISK_ERR);
     logger_status_t res = fatfs_umount(&storage);
-    TEST_ASSERT_EQUAL(LOG_ERR_UMOUNT, res);  
+    TEST_ASSERT_EQUAL(LOG_ERR_UNMOUNT, res);  
 }

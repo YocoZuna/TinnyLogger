@@ -1,6 +1,7 @@
 #include "fat_fs_backend.h"
 #include "logger.h"
 #include <stdio.h>
+#include "ff.h"
 
 
 PARTITION VolToPart[FF_VOLUMES] = {
@@ -56,7 +57,7 @@ logger_status_t fatfs_close(void* storage){
 }
 logger_status_t fatfs_umount(void* storage){
 
-    if(f_unmount(FF_VOLUME)!=FR_OK) return LOG_ERR_UMOUNT;
+    if(f_unmount(FF_VOLUME)!=FR_OK) return LOG_ERR_UNMOUNT;
     return LOG_OK;
 }
 const logger_backend_t fat_fs_backend = {
