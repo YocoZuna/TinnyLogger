@@ -111,7 +111,7 @@ static bool sd_read_single_block(uint8_t *buff, size_t len) {
 
   SD_spi_tx_rx(dummy_buff, buff, SD_SECTOR_SIZE, TIMEOUT);
 
-  // We can ommit CRC for now :D
+  
   SD_spi_rx_byte(&token, sizeof(token), TIMEOUT);
   SD_spi_rx_byte(&token, sizeof(token), TIMEOUT);
 

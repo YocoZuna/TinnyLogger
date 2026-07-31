@@ -5,6 +5,19 @@
 #include <sys/types.h>
 #include "fat_fs_backend.h"
 
+/********************* CONIFG  *************************************/
+
+#define LOGGER_INTERNAL_BUFFER_SIZE 512
+
+
+
+
+
+
+/*****************************************************************/
+
+#define MIN(a,b) (a>b ? b:a)
+
 typedef struct{
 
     logger_status_t (*mount)(void* storage);
@@ -14,15 +27,26 @@ typedef struct{
     logger_status_t (*sync)(void* storage);
     logger_status_t (*close)(void* storage);
     logger_status_t (*unmount)(void* storage);
+
 }logger_backend_t;
 
 typedef struct{
+    
+    uint8_t buffor[LOGGER_INTERNAL_BUFFER_SIZE];
+    size_t buffors_head;
+
+}logger_storage_t;
+
+typedef struct{
+
     const logger_backend_t* backend;
-    void* storage;
+    logger_storage_t internal_storage;
+    bool use_buffering;
     bool logger_ready;
+    void* storage;
+
 }logger_t;
 
 logger_status_t logger_init(logger_t* logger);
 logger_status_t logger_deinit(logger_t* logger);
 logger_status_t logger_write(logger_t* logger, const char* buffor, const size_t len);
-logger_status_t logger_printf(logger_t* logger, const char* format,...);

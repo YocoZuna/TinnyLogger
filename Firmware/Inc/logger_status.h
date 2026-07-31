@@ -10,5 +10,5 @@ typedef enum{
     LOG_ERR_READ,
     LOG_ERR_CLOSE,
     LOG_ERR_UNMOUNT,
-    LOG_ERR_INVALID_PARAM
+    LOG_ERR_INVALID_PARAM,
 }logger_status_t;
