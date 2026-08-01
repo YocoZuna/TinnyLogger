@@ -8,7 +8,6 @@
 
 
 /* static values*/
-static uint8_t initialized = 0;
 static logger_t s_logger;
 static fat_fs_storage_t s_storage;
 logger_backend_t fake_backend = {
@@ -20,9 +19,6 @@ logger_backend_t fake_backend = {
     .close = fake_close,
     .unmount = fake_unmount,
 };
-
-
-//TODO dodac testy na invalid parametry
 
 #define MAX_NUMMBER_OF_CALLAS 10
 static char expected_buffor[MAX_NUMMBER_OF_CALLAS][LOGGER_INTERNAL_BUFFER_SIZE];
@@ -76,18 +72,17 @@ void test_logger_init_OK(void){
 
 void test_logger_init_NULL_logger(void){
 
-    memset(&s_logger, NULL, sizeof(s_logger));
-    TEST_ASSERT_EQUAL(LOG_ERR_INVALID_PARAM,logger_init(&s_logger));
+    TEST_ASSERT_EQUAL(LOG_ERR_INVALID_PARAM,logger_init(NULL));
 }
 
 void test_logger_init_NULL_backend(void){
 
-    memset(&s_logger.backend, NULL, sizeof(&s_logger.backend));
+    s_logger.backend = NULL;
     TEST_ASSERT_EQUAL(LOG_ERR_INVALID_PARAM,logger_init(&s_logger));
 }
 void test_logger_init_NULL_storage(void){
 
-    memset(&s_logger.storage, NULL, sizeof(&s_logger.storage));
+    s_logger.storage = NULL;
     TEST_ASSERT_EQUAL(LOG_ERR_INVALID_PARAM,logger_init(&s_logger));
 }
 
@@ -107,30 +102,39 @@ void test_logger_init_open_failes(void){
 
 void test_logger_deinit_NULL_logger(void){
 
-    //memset(&s_logger, NULL, sizeof(s_logger));
-    //TEST_ASSERT_EQUAL(LOG_ERR_INVALID_PARAM,logger_deinit(&s_logger));
+    TEST_ASSERT_EQUAL(LOG_ERR_INVALID_PARAM,logger_deinit(NULL));
 }
 
+void test_logger_deinit_NULL_backend(void){
 
-void test_logger_deInit_logger_not_ready(void){
+    s_logger.backend = NULL;
+    TEST_ASSERT_EQUAL(LOG_ERR_INVALID_PARAM,logger_deinit(&s_logger));
+}
+void test_logger_deinit_NULL_storage(void){
+
+    s_logger.storage = NULL;
+    TEST_ASSERT_EQUAL(LOG_ERR_INVALID_PARAM,logger_deinit(&s_logger));
+}
+
+void test_logger_deinit_logger_not_ready(void){
 
     TEST_ASSERT_EQUAL(LOG_ERR_NOT_INITIALIZED,logger_deinit(&s_logger));
 }
-void test_logger_deInit_logger_flush_failes(void){
+void test_logger_deinit_logger_flush_failes(void){
 
     prepare_logger(false);
     fake_sync_ExpectAndReturn(s_logger.storage,!LOG_OK);
     TEST_ASSERT_EQUAL(LOG_ERR_SYNC,logger_deinit(&s_logger));
 }
 
-void test_logger_deInit_logger_close_failes(void){
+void test_logger_deinit_logger_close_failes(void){
 
     prepare_logger(false);
     fake_sync_ExpectAndReturn(s_logger.storage,LOG_OK);
     fake_close_ExpectAndReturn(s_logger.storage,LOG_ERR_CLOSE);
     TEST_ASSERT_EQUAL(LOG_ERR_CLOSE,logger_deinit(&s_logger));
 }
-void test_logger_deInit_logger_unmount_failes(void){
+void test_logger_deinit_logger_unmount_failes(void){
 
     prepare_logger(false);
     fake_sync_ExpectAndReturn(s_logger.storage,LOG_OK);
@@ -138,7 +142,7 @@ void test_logger_deInit_logger_unmount_failes(void){
     fake_unmount_ExpectAndReturn(s_logger.storage,LOG_ERR_UNMOUNT);
     TEST_ASSERT_EQUAL(LOG_ERR_UNMOUNT,logger_deinit(&s_logger));
 }
-void test_logger_deInit_logger_OK(void){
+void test_logger_deinit_logger_OK(void){
 
     prepare_logger(false);
     fake_sync_ExpectAndReturn(s_logger.storage,LOG_OK);
@@ -188,7 +192,7 @@ void test_logger_write_OK_buffering_write_buffer_on(void){
     TEST_ASSERT_EQUAL_STRING(buffor,s_logger.internal_storage.buffor);
 }
 
-void test_logger_write_write_twice_than_buff_size_buffering_on(void){
+void test_logger_write_twice_than_buff_size_buffering_on(void){
     
     prepare_logger(true);
     char buffor[(LOGGER_INTERNAL_BUFFER_SIZE*2)+10];
@@ -210,12 +214,34 @@ void test_logger_write_write_twice_than_buff_size_buffering_on(void){
     TEST_ASSERT_EQUAL(LOG_OK,logger_write(&s_logger,buffor,sizeof(buffor)));
     TEST_ASSERT_EQUAL(10,s_logger.internal_storage.buffors_head);
     TEST_ASSERT_EQUAL(2,write_called_times);
-    
+
 }
 
 void test_logger_write_NULL_logger(void){
 
-    memset(&s_logger, NULL, sizeof(s_logger));
-    TEST_ASSERT_EQUAL(LOG_ERR_INVALID_PARAM,logger_write(&s_logger,"1",2));
+    TEST_ASSERT_EQUAL(LOG_ERR_INVALID_PARAM,logger_write(NULL,"",1));
+}
+
+void test_logger_write_NULL_backend(void){
+
+    s_logger.backend = NULL;
+    TEST_ASSERT_EQUAL(LOG_ERR_INVALID_PARAM,logger_write(&s_logger,"",1));
+}
+void test_logger_write_NULL_storage(void){
+
+    s_logger.storage = NULL;
+    TEST_ASSERT_EQUAL(LOG_ERR_INVALID_PARAM,logger_write(&s_logger,"",1));
+}
+
+void test_logger_write_NULL_buffor(void){
+
+
+    TEST_ASSERT_EQUAL(LOG_ERR_INVALID_PARAM,logger_write(&s_logger,NULL,1));
+}
+
+void test_logger_write_invalid_len(void){
+    
+    TEST_ASSERT_EQUAL(LOG_ERR_INVALID_PARAM,logger_write(&s_logger,"",0));
+
 }
 

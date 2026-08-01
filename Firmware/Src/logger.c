@@ -8,7 +8,7 @@
 
 
 static logger_status_t logger_flush(logger_t* logger);
-static logger_status_t logger_status = LOG_OK;
+static logger_status_t logger_status = LOG_ERR_NOT_INITIALIZED;
 
 logger_status_t logger_init(logger_t* logger)
 {
@@ -30,7 +30,9 @@ logger_status_t logger_init(logger_t* logger)
 }
 logger_status_t logger_deinit(logger_t* logger){
     
-    if(logger==NULL) return LOG_ERR_INVALID_PARAM;
+    if (logger == NULL || logger->backend == NULL || logger->storage == NULL) {
+        return LOG_ERR_INVALID_PARAM;
+    }
     if(!logger->logger_ready) return LOG_ERR_NOT_INITIALIZED;
     
     
@@ -45,8 +47,9 @@ logger_status_t logger_deinit(logger_t* logger){
 }
 
 logger_status_t logger_write(logger_t* logger,const char* buffor,size_t len){
-    
-    if(len==0 || buffor==NULL || logger==NULL) return LOG_ERR_INVALID_PARAM;
+ 
+    if(len==0 || buffor==NULL || logger == NULL || logger->backend == NULL 
+        || logger->storage == NULL) return LOG_ERR_INVALID_PARAM;
     if(!logger->logger_ready) return LOG_ERR_NOT_INITIALIZED;
 
     if(logger->use_buffering==false){
@@ -83,7 +86,9 @@ logger_status_t logger_write(logger_t* logger,const char* buffor,size_t len){
 
 static logger_status_t logger_flush(logger_t* logger){
     
-    if(logger==NULL) return LOG_ERR_INVALID_PARAM;
+    if (logger == NULL || logger->backend == NULL || logger->storage == NULL) {
+        return LOG_ERR_INVALID_PARAM;
+    }
     if(logger->backend->sync(logger->storage)!=LOG_OK) return LOG_ERR_SYNC;
     
     return LOG_OK;

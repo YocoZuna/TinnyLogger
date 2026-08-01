@@ -1,3 +1,0 @@
-/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/build/Debug/CMakeFiles/TinnyLogger.dir
-/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/build/Debug/CMakeFiles/edit_cache.dir
-/home/yocozuna/Desktop/Test/TinnyLogger/Firmware/build/Debug/CMakeFiles/rebuild_cache.dir

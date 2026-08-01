@@ -14,6 +14,10 @@ static uint8_t response_R7_R3[4];
 static uint8_t dummy_buff[SD_SECTOR_SIZE];
 extern SPI_HandleTypeDef SD_CARD_SPI;
 
+/* SD driver should not know that it is using SPI...
+  I shall introduce abstraction for error codes new typedefs etc
+  Dodanie interfacu do SD cos jak logger pointery + void* bus
+*/
 static SPI_StatusTypeDef SD_spi_tx_rx(const uint8_t *tx_buffer,
                                       uint8_t *rx_buffer, size_t size,
                                       uint32_t timeout) {
