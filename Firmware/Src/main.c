@@ -51,7 +51,6 @@ int main(void)
     
     while (1)
     {
-        logger_printf(&logger, "Hello, world!\n");
 
     }
 }
