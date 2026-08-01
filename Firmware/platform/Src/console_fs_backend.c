@@ -40,7 +40,7 @@ logger_status_t console_close(void* storage){
 }
 logger_status_t console_umount(void* storage){
 
-    if(f_unmount(FF_VOLUME)!=FR_OK) return LOG_ERR_UMOUNT;
+    if(f_unmount(FF_VOLUME)!=FR_OK) return LOG_ERR_UNMOUNT;
     return LOG_OK;
 }
 const logger_backend_t console_backend = {
