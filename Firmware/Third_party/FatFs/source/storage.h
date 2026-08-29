@@ -1,7 +1,6 @@
 #include "diskio.h"
 #include "ff.h"
 #include "sd_card.h"
-#include "platform.h"
 
 
 /* FLASH disk not present always return Not ready error*/

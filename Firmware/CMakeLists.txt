@@ -23,10 +23,18 @@
 # Core project settings
 project("TinnyLogger")
 enable_language(C CXX ASM)
+
+if(NOT DEFINED BOARD)
+    set(BOARD TinnyLoggerSTM)
+    add_compile_definitions(-DTINNY_LOGGER_STM)
+    message(STATUS "Building for board: ${BOARD}")   
+endif()
+
 message("Build type: " ${CMAKE_BUILD_TYPE})
 add_compile_definitions(-DSTM32L432xx)
 add_compile_definitions(-DUSE_FULL_LL_DRIVER)
 add_compile_definitions(-DUSE_FULL_HAL_DRIVER)
+add_compile_definitions(-DTINNY_LOGGER)
 # Setup compiler settings
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -54,7 +62,7 @@ file(GLOB FATFS_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Third_party/FatFs/source/*.c
 )
 file(GLOB PLATFORM_SRCS
-    ${CMAKE_CURRENT_SOURCE_DIR}/platform/Src/*.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/platform/src/${BOARD}/*.c
 )
 
 
@@ -80,7 +88,8 @@ set(include_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Device
     ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32L4xx_HAL/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/Third_party/FatFs/source
-    ${CMAKE_CURRENT_SOURCE_DIR}/platform/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/platform/inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/platform/board/TinnyLogger/${BOARD}
     #${CMAKE_CURRENT_SOURCE_DIR}/Sensors/AHT20/Inc
 )
 
@@ -153,7 +162,7 @@ target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE
     ${cpu_PARAMS}
     ${compiler_OPTS}
     -fstack-usage
-    -fcyclomatic-complexity
+    #-fcyclomatic-complexity
     -Wall
     -Wextra
     -Wpedantic

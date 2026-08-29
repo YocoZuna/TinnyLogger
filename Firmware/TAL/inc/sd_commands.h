@@ -24,7 +24,7 @@ CMD58	    None / Zero	            R3          No      Read OCR
 #define CMD8 COMMAND_BASE+0x08
 #define CMD12 COMMAND_BASE+0x0C
 #ifdef USE_SDSC // Command 16 is only used for SDSC cards, SDHC and SDXC cards have fixed block length of 512 bytes
-#define CMD16 COMMAND_BASE+0x10
+	#define CMD16 COMMAND_BASE+0x10
 #endif
 #define CMD17 COMMAND_BASE+0x11
 #define CMD18 COMMAND_BASE+0x12

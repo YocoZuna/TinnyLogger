@@ -1,12 +1,15 @@
 #include "platform.h"
 #include "stm32l4xx_hal_gpio.h"
-
+#include "spi.h"
 
 SPI_HandleTypeDef SD_CARD_SPI;
 I2C_HandleTypeDef I2C_PORT;
 
 
-void P_init_SD_SPI(){
+static void 
+
+
+void P_init_SD(){
     __HAL_RCC_SPI3_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOA_CLK_ENABLE();

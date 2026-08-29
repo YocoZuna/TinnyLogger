@@ -1,8 +1,7 @@
-#include "sd_card.h"
-#include "sd_commands.h"
-#include "spi.h"
+#include "sd.h"
 
 #define TIMEOUT 10
+
 
 static DSTATUS SD_card_status = STA_NOINIT; /* Disk Status */
 static SD_cardtype_t CardType =
@@ -12,40 +11,9 @@ uint8_t SD_DUMMY_BYTE[] = {0xFFU};
 static uint8_t response_R1;
 static uint8_t response_R7_R3[4];
 static uint8_t dummy_buff[SD_SECTOR_SIZE];
-extern SPI_HandleTypeDef SD_CARD_SPI;
 
-/* SD driver should not know that it is using SPI...
-  I shall introduce abstraction for error codes new typedefs etc
-  Dodanie interfacu do SD cos jak logger pointery + void* bus
-*/
-static SPI_StatusTypeDef SD_spi_tx_rx(const uint8_t *tx_buffer,
-                                      uint8_t *rx_buffer, size_t size,
-                                      uint32_t timeout) {
-  return spi_tx_rx(&SD_CARD_SPI, tx_buffer, rx_buffer, size, timeout);
-}
-
-static SPI_StatusTypeDef SD_spi_tx_byte(const uint8_t *data, size_t len,
-                                        uint32_t timeout) {
-  return spi_tx(&SD_CARD_SPI, data, len, timeout);
-}
-
-static SPI_StatusTypeDef SD_spi_rx_byte(uint8_t *rx_buffer, size_t len,
-                                        uint32_t timeout) {
-  return spi_rx(&SD_CARD_SPI, rx_buffer, len, timeout);
-}
-static void SD_deselect() {
-  spi_deselect(CS_PORT, CS_PIN);
-  SD_spi_tx_byte((uint8_t[]){0xFF}, 1, TIMEOUT);
-}
-
-static void SD_select() {
-  spi_select(CS_PORT, CS_PIN);
-  time_1ms_delay(1);
-}
-static void sd_delay(uint32_t ms) { time_1ms_delay(ms); }
-static uint8_t SD_check_power() { return PowerOnFlag; }
-static void SD_power_off() { PowerOnFlag = 1; }
 static int SD_card_send_command(uint8_t cmd, uint32_t arg) {
+
   uint8_t command_packet[CMD_SIZE];
   uint8_t response_buffer[CMD_SIZE];
   uint8_t response = 0xFF;
@@ -60,13 +28,13 @@ static int SD_card_send_command(uint8_t cmd, uint32_t arg) {
                       : (cmd == CMD8) ? SD_CMD8_CRC
                                       : SD_DUMMY_CRC;
 
-  SD_spi_tx_rx(command_packet, response_buffer, CMD_SIZE, TIMEOUT);
+  hSD_card.tx_rx(command_packet, response_buffer, CMD_SIZE, TIMEOUT);
 
   if (cmd == CMD12)
-    SD_spi_rx_byte(response_buffer, 1, TIMEOUT);
+    hSD_card.rx_byte(response_buffer, 1, TIMEOUT);
   do {
 
-    SD_spi_rx_byte(&response, 1, TIMEOUT);
+    hSD_card.rx_byte(&response, 1, TIMEOUT);
   } while (response & 0x80);
 
   return response;
@@ -75,16 +43,16 @@ static DRESULT SD_power_on() {
 
   uint8_t retries = 10;
   do {
-    SD_deselect();
+    hSD_card.deselect();
 
     // Send 15*8 dummy clocks to initialize the SD card
     for (int i = 0; i < DUMMY_CLOCKS; i++) {
-      if (SD_spi_tx_byte(SD_DUMMY_BYTE, sizeof(SD_DUMMY_BYTE), TIMEOUT) !=
+      if (hSD_card.tx_byte(SD_DUMMY_BYTE, sizeof(SD_DUMMY_BYTE), TIMEOUT) !=
           SPI_OK) {
         return RES_NOTRDY;
       }
     }
-    SD_select();
+    hSD_card.select();
 
     if (retries-- == 0) {
       // If retries are exhausted, return an error or handle it accordingly
@@ -93,17 +61,18 @@ static DRESULT SD_power_on() {
     // Send CMD0 to reset the SD card
   } while (SD_card_send_command(CMD0, 0) != 0x01);
 
-  SD_deselect();
+  hSD_card.deselect();
   PowerOnFlag = 1;
 
   return RES_OK;
 }
 static bool sd_read_single_block(uint8_t *buff, size_t len) {
+  
   uint8_t retires = 200;
   uint8_t token;
 
   do {
-    SD_spi_rx_byte(&token, sizeof(token), TIMEOUT);
+    hSD_card.rx_byte(&token, sizeof(token), TIMEOUT);
 
   } while (token == 0xFF && retires--);
 
@@ -113,37 +82,37 @@ static bool sd_read_single_block(uint8_t *buff, size_t len) {
 
   memset(dummy_buff, SD_DUMMY_BYTE[0], SD_SECTOR_SIZE);
 
-  SD_spi_tx_rx(dummy_buff, buff, SD_SECTOR_SIZE, TIMEOUT);
+  hSD_card.tx_rx(dummy_buff, buff, SD_SECTOR_SIZE, TIMEOUT);
 
   
-  SD_spi_rx_byte(&token, sizeof(token), TIMEOUT);
-  SD_spi_rx_byte(&token, sizeof(token), TIMEOUT);
+  hSD_card.rx_byte(&token, sizeof(token), TIMEOUT);
+  hSD_card.rx_byte(&token, sizeof(token), TIMEOUT);
 
   return true;
 }
 
 static bool sd_write_single_block(const uint8_t *buff, size_t len) {
+
   uint8_t res;
 
   do {
-    SD_spi_rx_byte(&res, sizeof(res), TIMEOUT);
+    hSD_card.rx_byte(&res, sizeof(res), TIMEOUT);
   } while (res != 0xFF);
 
-  SD_spi_tx_byte((uint8_t[]){0xFE}, sizeof(res), TIMEOUT);
+  hSD_card.tx_byte((uint8_t[]){0xFE}, sizeof(res), TIMEOUT);
 
-  SD_spi_tx_rx(buff, dummy_buff, len, TIMEOUT);
+  hSD_card.tx_rx(buff, dummy_buff, len, TIMEOUT);
 
-  SD_spi_tx_byte((uint8_t[]){0xFF}, 1, TIMEOUT);
-  SD_spi_tx_byte((uint8_t[]){0xFF}, 1, TIMEOUT);
+  hSD_card.tx_byte((uint8_t[]){0xFF}, 1, TIMEOUT);
+  hSD_card.tx_byte((uint8_t[]){0xFF}, 1, TIMEOUT);
 
-  // 5. Odbierz Data Response Token
-  SD_spi_rx_byte(&res, sizeof(res), TIMEOUT);
+  hSD_card.rx_byte(&res, sizeof(res), TIMEOUT);
   if ((res & 0x1F) != 0x05) {
     return false;
   }
 
   do {
-    SD_spi_rx_byte(&res, sizeof(res), TIMEOUT);
+    hSD_card.rx_byte(&res, sizeof(res), TIMEOUT);
   } while (res == 0x00);
 
   return true;
@@ -158,30 +127,30 @@ static bool sd_write_multiple_blocks(uint32_t sector_addr, const uint8_t *buff,
 
   for (size_t i = 0; i < count; i++) {
     do {
-      SD_spi_rx_byte(&res, sizeof(res), TIMEOUT);
+      hSD_card.rx_byte(&res, sizeof(res), TIMEOUT);
     } while (res != 0xFF);
 
-    SD_spi_tx_byte((uint8_t[]){0xFC}, 1, TIMEOUT);
+    hSD_card.tx_byte((uint8_t[]){0xFC}, 1, TIMEOUT);
 
-    SD_spi_tx_rx(&buff[i * SD_SECTOR_SIZE], dummy_buff, SD_SECTOR_SIZE,
+    hSD_card.tx_rx(&buff[i * SD_SECTOR_SIZE], dummy_buff, SD_SECTOR_SIZE,
                  TIMEOUT);
 
-    SD_spi_tx_byte((uint8_t[]){0xFF}, 1, TIMEOUT);
-    SD_spi_tx_byte((uint8_t[]){0xFF}, 1, TIMEOUT);
+    hSD_card.tx_byte((uint8_t[]){0xFF}, 1, TIMEOUT);
+    hSD_card.tx_byte((uint8_t[]){0xFF}, 1, TIMEOUT);
 
-    SD_spi_rx_byte(&res, sizeof(res), TIMEOUT);
+    hSD_card.rx_byte(&res, sizeof(res), TIMEOUT);
     if ((res & 0x1F) != 0x05)
-      return false; // Błąd zapisu bloku
+      return false; 
 
     do {
-      SD_spi_rx_byte(&res, sizeof(res), TIMEOUT);
+      hSD_card.rx_byte(&res, sizeof(res), TIMEOUT);
     } while (res == 0x00);
   }
 
-  SD_spi_tx_byte((uint8_t[]){0xFD}, 1, TIMEOUT);
+  hSD_card.tx_byte((uint8_t[]){0xFD}, 1, TIMEOUT);
 
   do {
-    SD_spi_rx_byte(&res, sizeof(res), TIMEOUT);
+    hSD_card.rx_byte(&res, sizeof(res), TIMEOUT);
   } while (res == 0x00);
 
   return true;
@@ -197,7 +166,7 @@ DRESULT SD_disk_read(BYTE *buff, LBA_t sector, UINT count) {
   if (CardType == SDSC)
     sector *= 512;
 
-  SD_select();
+  hSD_card.select();
   if (count == 1) {
     if ((SD_card_send_command(CMD17, sector) == 0) &&
         sd_read_single_block(buff, SD_SECTOR_SIZE))
@@ -213,7 +182,7 @@ DRESULT SD_disk_read(BYTE *buff, LBA_t sector, UINT count) {
       SD_card_send_command(CMD12, 0);
     }
   }
-  SD_deselect();
+  hSD_card.deselect();
 
   return count ? RES_ERROR : RES_OK;
 }
@@ -229,7 +198,7 @@ DRESULT SD_disk_write(const BYTE *buff, LBA_t sector, UINT count) {
   if (CardType == SDSC)
     sector *= 512;
 
-  SD_select();
+  hSD_card.select();
 
   if (count == 1) {
     if ((SD_card_send_command(CMD24, sector) == 0) &&
@@ -239,7 +208,7 @@ DRESULT SD_disk_write(const BYTE *buff, LBA_t sector, UINT count) {
     sd_write_multiple_blocks(sector, buff, count);
   }
 
-  SD_deselect();
+  hSD_card.deselect();
   return count ? RES_ERROR : RES_OK;
 }
 
@@ -252,7 +221,7 @@ DSTATUS SD_card_init() {
     goto init_done;
   }
 
-  SD_select();
+  hSD_card.select();
 
   // Send CMD0 to reset the SD card
   response_R1 = SD_card_send_command(CMD0, 0);
@@ -264,11 +233,11 @@ DSTATUS SD_card_init() {
   response_R1 = SD_card_send_command(
       CMD8, 0x1AA); // Argument for CMD8: 0x1AA (check voltage range)
 
-  SD_spi_rx_byte(response_R7_R3, sizeof(response_R7_R3), TIMEOUT);
+  hSD_card.rx_byte(response_R7_R3, sizeof(response_R7_R3), TIMEOUT);
 
   if (response_R7_R3[2] != 0x01 || response_R7_R3[3] != 0xAA) {
     // Invalid voltage range, SD card may not be compatible
-    SD_deselect();
+    hSD_card.deselect();
     goto init_done;
   }
 
@@ -285,13 +254,13 @@ DSTATUS SD_card_init() {
   } while (response_R1 != 0x00);
   SD_card_send_command(CMD58, 0); // Argument 0 dla CMD58
 
-  SD_spi_rx_byte(response_R7_R3, sizeof(response_R7_R3), TIMEOUT);
+  hSD_card.rx_byte(response_R7_R3, sizeof(response_R7_R3), TIMEOUT);
 
   CardType = (response_R7_R3[0] & 0x40)
                  ? SDHC
                  : SDSC; // Check if the CCS (Card Capacity Status) bit is set
 
-  SD_deselect();
+  hSD_card.deselect();
 
   SD_card_status &= ~STA_NOINIT;
 

@@ -20,11 +20,10 @@
 #define CONSOLE_RX_PIN LL_GPIO_PIN_15
 
 
-void P_init_SD_SPI();
+void P_init_SD();
 void P_init_time_base();
 void P_init_FPU();
 void P_init_I2CX();
-void P_init_SD_SPI();
 void P_init_time_base();
 void P_init_FPU();
 void P_init_I2CX();
