@@ -16,41 +16,15 @@
  ******************************************************************************
  */
 
+#include "platform/inc/i2c.h"
+#include "platform/inc/spi.h"
 
-
-#include <stdint.h>
-
-#include "Sensors/AHT20/Inc/AHT20.h"
-#include "console_fs_backend.h"
-#include "platform.h"
-#include "logger.h"
-#include <string.h>
-#include <stdio.h>
-#include <uart.h>
-#include "i2c.h"
-#include "sensors.h"
-
-extern const logger_backend_t fat_fs_backend;
 int main(void)
 {
+    P_i2c_init();
+    P_spi_init();
 
-
-    P_init_FPU();
-    P_init_time_base();
-    P_init_I2CX();
-    fat_fs_storage_t fat_storage;
-    logger_t logger;
-    logger.backend = &fat_fs_backend;
-    logger.storage = &fat_storage;
-    logger.logger_ready = false;
-    logger_init(&logger);
-    
-    //struct AHT20 sensor;
-    //AHT20_Create(&sensor, itf_AHT20_delay,itf_AHT20_read,itf_AHT20_write);
-    //AHT20_Init(&sensor);
-    
     while (1)
     {
-
     }
 }

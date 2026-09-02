@@ -21,20 +21,31 @@
 #
 
 # Core project settings
-project("TinnyLogger")
-enable_language(C CXX ASM)
+project("TinnyLogger" LANGUAGES C CXX ASM)
 
 if(NOT DEFINED BOARD)
     set(BOARD TinnyLoggerSTM)
-    add_compile_definitions(-DTINNY_LOGGER_STM)
-    message(STATUS "Building for board: ${BOARD}")   
 endif()
 
+file(GLOB platform_SRCS CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/platform/src/*.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/platform/board/${BOARD}/src/*.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/platform/board/${BOARD}/mcu/*.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/platform/board/${BOARD}/mcu/Drivers/STM32L4xx_HAL/Src/*.c"
+)
+
+add_compile_definitions(
+    TINNY_LOGGER_STM
+    STM32L432xx
+    USE_FULL_LL_DRIVER
+    USE_FULL_HAL_DRIVER
+    TINNY_LOGGER
+)
+
+message(STATUS "Building for board: ${BOARD}")
+
 message("Build type: " ${CMAKE_BUILD_TYPE})
-add_compile_definitions(-DSTM32L432xx)
-add_compile_definitions(-DUSE_FULL_LL_DRIVER)
-add_compile_definitions(-DUSE_FULL_HAL_DRIVER)
-add_compile_definitions(-DTINNY_LOGGER)
+
 # Setup compiler settings
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -50,47 +61,28 @@ set(cpu_PARAMS
     # -mcpu, -mfloat, -mfloat-abi, ...
 )
 
-
-#file(GLOB AHT20_SRCS
-#    ${CMAKE_CURRENT_SOURCE_DIR}/Sensors/AHT20/Src/*.c
-#)
-
-file(GLOB HAL_SRCS
-    ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32L4xx_HAL/Src/*.c
-)
-file(GLOB FATFS_SRCS
-    ${CMAKE_CURRENT_SOURCE_DIR}/Third_party/FatFs/source/*.c
-)
-file(GLOB PLATFORM_SRCS
-    ${CMAKE_CURRENT_SOURCE_DIR}/platform/src/${BOARD}/*.c
-)
-
-
-# Sources
-set(sources_SRCS
-    ${HAL_SRCS}
-    ${PLATFORM_SRCS}
-    ${FATFS_SRCS}
-    ${CMAKE_CURRENT_SOURCE_DIR}/Src/main.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/Src/sd_card.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/Src/logger.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/Src/stm32l4xx_it.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/Src/sysmem.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/Src/system_stm32l4xx.c
-    #${AHT20_SRCS}
-
-)
-
 # Include directories for all compilers
 set(include_DIRS
 	${CMAKE_CURRENT_SOURCE_DIR}/Inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Include
-    ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Device
-    ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32L4xx_HAL/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/platform/board/${BOARD}/mcu/Drivers/CMSIS/Include
+    ${CMAKE_CURRENT_SOURCE_DIR}/platform/board/${BOARD}/mcu/Drivers/CMSIS/Device
+    ${CMAKE_CURRENT_SOURCE_DIR}/platform/board/${BOARD}/mcu/Drivers/STM32L4xx_HAL/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/platform/board/${BOARD}/inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/platform/board/${BOARD}
+    ${CMAKE_CURRENT_SOURCE_DIR}/platform/board
     ${CMAKE_CURRENT_SOURCE_DIR}/Third_party/FatFs/source
+    ${CMAKE_CURRENT_SOURCE_DIR}/platform
     ${CMAKE_CURRENT_SOURCE_DIR}/platform/inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/platform/board/TinnyLogger/${BOARD}
     #${CMAKE_CURRENT_SOURCE_DIR}/Sensors/AHT20/Inc
+)
+
+# Sources
+set(sources_SRCS
+
+    ${platform_SRCS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/Src/main.c
+    #${AHT20_SRCS}
+
 )
 
 # Include directories for each compiler
@@ -123,6 +115,20 @@ set(linker_OPTS)
 # This will add script generated
 # information to the project
 include("cmake/vscode_generated.cmake")
+
+# The generated file assumes the classic STM32Cube layout (Src/ + Drivers/ at the root).
+# This project stores the MCU support files under platform/board/<board>/mcu, so we must
+# remove the wrong entries and add the actual project-specific ones.
+list(REMOVE_ITEM sources_SRCS
+    "${CMAKE_CURRENT_SOURCE_DIR}/Src/syscall.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Src/sysmem.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Src/startup_stm32l432xx.S"
+)
+list(APPEND sources_SRCS
+    "${CMAKE_CURRENT_SOURCE_DIR}/platform/board/${BOARD}/mcu/syscall.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/platform/board/${BOARD}/mcu/sysmem.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/platform/board/${BOARD}/mcu/startup_stm32l432xx.S"
+)
 
 # Link directories setup
 # Must be before executable is added
