@@ -1,7 +1,16 @@
-#include "diskio.h"
-#include "ff.h"
-#include "sd_card.h"
+#include "sd.h"
+#include "features/sd_card.h"
 
+static void IO_handlers_init(){
+    SD_init_IO((SD_IO_t){P_SD_tx_rx,
+        P_SD_tx_byte,
+        P_SD_rx_byte,
+        P_SD_deselect,
+        P_SD_select,
+        0          
+        });
+        
+}
 
 /* FLASH disk not present always return Not ready error*/
 static inline int FLASH_disk_status(){return STA_NODISK;}
@@ -29,7 +38,8 @@ static inline int MMC_disk_status(){
 }
 
 static inline int MMC_disk_initialize(){
-    P_init_SD_SPI();
+    P_SD_SPI();
+    IO_handlers_init();
     return SD_card_init();
 }
 

@@ -7,11 +7,7 @@
 /* storage control modules to the FatFs module with a defined API.       */
 /*-----------------------------------------------------------------------*/
 
-#include "ff.h"			/* Basic definitions of FatFs */
-#include "diskio.h"		/* Declarations FatFs MAI */
 
-/* Example: Declarations of the platform and disk functions in the project */
-#include "platform.h"
 #include "storage.h"
 
 /* Example: Mapping of physical drive number for each drive */

@@ -5,7 +5,7 @@
 #include <stddef.h>
 #include "error.h"
 #if defined(TINNY_LOGGER_STM)
-	#include "board/uart.h"
+	#include "board/board_uart.h"
 #endif
 
 

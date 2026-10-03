@@ -2,8 +2,9 @@
 #define PLATFORM_SD_H
 
 #if defined(TINNY_LOGGER_STM)
-	#include "board/sd.h"
+	#include "board/board_sd.h"
 #endif
+
 #include "error.h"
 error_status_t P_SD_init();
 error_status_t P_SD_tx_rx(const uint8_t *tx_buffer,uint8_t *rx_buffer,size_t size,uint32_t timeout);

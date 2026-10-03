@@ -16,13 +16,14 @@
  ******************************************************************************
  */
 
-#include "platform/inc/i2c.h"
-#include "platform/inc/spi.h"
-
+#include "uart.h"
+#include <stdint.h>
+#include <string.h>
 int main(void)
 {
-    P_i2c_init();
-    P_spi_init();
+    uint8_t hello[20] = "Hello word";
+    P_uart_init();
+    P_uart_tx(hello,20,1000);
 
     while (1)
     {

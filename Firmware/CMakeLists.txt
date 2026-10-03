@@ -36,6 +36,7 @@ file(GLOB platform_SRCS CONFIGURE_DEPENDS
 
 add_compile_definitions(
     TINNY_LOGGER_STM
+    USE_SD_CARD
     STM32L432xx
     USE_FULL_LL_DRIVER
     USE_FULL_HAL_DRIVER
@@ -67,20 +68,29 @@ set(include_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/platform/board/${BOARD}/mcu/Drivers/CMSIS/Include
     ${CMAKE_CURRENT_SOURCE_DIR}/platform/board/${BOARD}/mcu/Drivers/CMSIS/Device
     ${CMAKE_CURRENT_SOURCE_DIR}/platform/board/${BOARD}/mcu/Drivers/STM32L4xx_HAL/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/platform/inc
     ${CMAKE_CURRENT_SOURCE_DIR}/platform/board/${BOARD}/inc
     ${CMAKE_CURRENT_SOURCE_DIR}/platform/board/${BOARD}
     ${CMAKE_CURRENT_SOURCE_DIR}/platform/board
     ${CMAKE_CURRENT_SOURCE_DIR}/Third_party/FatFs/source
     ${CMAKE_CURRENT_SOURCE_DIR}/platform
-    ${CMAKE_CURRENT_SOURCE_DIR}/platform/inc
+    ######################################################################
+    ${CMAKE_CURRENT_SOURCE_DIR}/features/logger/backends/inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/features/logger/backends/inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/features/logger/inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/features/SD_card
     #${CMAKE_CURRENT_SOURCE_DIR}/Sensors/AHT20/Inc
 )
 
 # Sources
 set(sources_SRCS
-
+     
     ${platform_SRCS}
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/main.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/features/logger/backends/src/console_fs_backend.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/features/logger/backends/src/fat_fs_backend.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/features/logger/src/logger.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/features/SD_card/sd_card.c
     #${AHT20_SRCS}
 
 )

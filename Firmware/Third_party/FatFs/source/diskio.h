@@ -5,10 +5,12 @@
 #ifndef _DISKIO_DEFINED
 #define _DISKIO_DEFINED
 
+#include "ff.h"			/* Basic definitions of FatFs */
+#include "diskio.h"		/* Declarations FatFs MAI */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 /* Status of Disk Functions */
 typedef BYTE	DSTATUS;
 

@@ -5,7 +5,7 @@
 #include <stddef.h>
 #include "error.h"
 #if defined(TINNY_LOGGER_STM)
-	#include "board/i2c.h"
+	#include "board/board_i2c.h"
 #endif
 
 error_status_t P_i2c_init(void);
