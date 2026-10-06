@@ -10,7 +10,7 @@
 /* I2C SPI pins*/
 #define SCL_PIN GPIO_PIN_9
 #define SDA_PIN GPIO_PIN_10
-#define I2C_GPIO_PORT GPIOB
+#define I2C_GPIO_PORT GPIOA
 #define I2C_INSTANCE I2C1
 
 HAL_StatusTypeDef board_init_i2c();

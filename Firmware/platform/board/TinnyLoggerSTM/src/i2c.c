@@ -5,7 +5,7 @@ static I2C_HandleTypeDef hi2c1;
 
 HAL_StatusTypeDef board_init_i2c(void)
 {
-    __HAL_RCC_GPIOB_CLK_ENABLE();
+    __HAL_RCC_GPIOA_CLK_ENABLE();
     GPIO_InitTypeDef GPIO_InitStruct = {0};
     GPIO_InitStruct.Pin = SCL_PIN | SDA_PIN;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
@@ -32,19 +32,19 @@ HAL_StatusTypeDef board_init_i2c(void)
 
 HAL_StatusTypeDef board_i2c_tx(const uint8_t slaveAddr, uint8_t *data,size_t size,uint32_t timeout)
 {
-    return HAL_I2C_Master_Transmit(&hi2c1, slaveAddr, data, size, timeout);
+    return HAL_I2C_Master_Transmit(&hi2c1, (slaveAddr<<1), data, size, timeout);
 }
 HAL_StatusTypeDef board_i2c_rx(const uint8_t slaveAddr, uint8_t * data, size_t size,uint32_t timeout){
 
-    return HAL_I2C_Master_Receive(&hi2c1, slaveAddr, data, size, timeout);
+    return HAL_I2C_Master_Receive(&hi2c1, (slaveAddr<<1), data, size, timeout);
 }
 HAL_StatusTypeDef board_i2c_write_mem(const uint8_t slaveAddr, const uint16_t memAddr, uint8_t *data, size_t size, uint32_t timeout){
     
-    return HAL_I2C_Mem_Write(&hi2c1, slaveAddr, memAddr, I2C_MEMADD_SIZE_16BIT, data, size, timeout);
+    return HAL_I2C_Mem_Write(&hi2c1, (slaveAddr<<1), memAddr, I2C_MEMADD_SIZE_16BIT, data, size, timeout);
 }
 HAL_StatusTypeDef board_i2c_read_mem(const uint8_t slaveAddr, const uint16_t memAddr, uint8_t *data, size_t size, uint32_t timeout){
     
-    return HAL_I2C_Mem_Read(&hi2c1, slaveAddr, memAddr, I2C_MEMADD_SIZE_16BIT, data, size, timeout);
+    return HAL_I2C_Mem_Read(&hi2c1, (slaveAddr<<1), memAddr, I2C_MEMADD_SIZE_16BIT, data, size, timeout);
 }
 HAL_StatusTypeDef board_i2c_deinit()
 {
