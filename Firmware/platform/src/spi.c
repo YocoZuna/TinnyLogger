@@ -21,9 +21,9 @@ error_status_t P_spi_deinit(){
 	return map_hal_status_to_error(board_spi_deinit());
 }
 
-void P_spi_select(const spi_bus_t *cs){
+void P_spi_select(const spi_slave_io_t *cs){
 	board_spi_select(cs);
 }
-void P_spi_deselect(const spi_bus_t *cs){
+void P_spi_deselect(const spi_slave_io_t *cs){
 	board_spi_deselect(cs);
 }

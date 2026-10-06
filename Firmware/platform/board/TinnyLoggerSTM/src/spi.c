@@ -57,12 +57,12 @@ HAL_StatusTypeDef board_spi_deinit(void)
     return HAL_SPI_DeInit(&spi_bus);
 }
 
-void board_spi_select(const spi_bus_t *cs)
+void board_spi_select(const spi_slave_io_t *cs)
 {
     HAL_GPIO_WritePin(cs->cs_port, cs->cs_pin, GPIO_PIN_RESET);
 }
 
-void board_spi_deselect(const spi_bus_t *cs)
+void board_spi_deselect(const spi_slave_io_t *cs)
 {
     HAL_GPIO_WritePin(cs->cs_port, cs->cs_pin, GPIO_PIN_SET);
 }

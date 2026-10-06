@@ -1,7 +1,7 @@
 #include "i2c.h"
 #include "board_config.h"
 
-static I2C_HandleTypeDef hi2c1;
+static I2C_HandleTypeDef hi2c1={0};
 
 HAL_StatusTypeDef board_init_i2c(void)
 {
