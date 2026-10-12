@@ -1,8 +1,10 @@
 #include "spi.h"
 #include "board_config.h"
+#include "stm32l4xx_hal_gpio.h"
+#include "stm32l4xx_hal_spi.h"
 #include <string.h>
 
-static SPI_HandleTypeDef spi_bus = {0};
+SPI_HandleTypeDef spi_bus = {0};
 
 HAL_StatusTypeDef board_init_spi(void)
 {
@@ -14,11 +16,11 @@ HAL_StatusTypeDef board_init_spi(void)
     spi_bus.Init.CLKPolarity = SPI_POLARITY_LOW;
     spi_bus.Init.CLKPhase = SPI_PHASE_1EDGE;
     spi_bus.Init.NSS = SPI_NSS_SOFT;
-    spi_bus.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+    spi_bus.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128;
     spi_bus.Init.FirstBit = SPI_FIRSTBIT_MSB;
 
     GPIO_InitTypeDef GPIO_InitStruct = {0};
-    GPIO_InitStruct.Pin = SPI_MOSI_PIN | SPI_MISO_PIN | SPI_SCK_PIN;
+    GPIO_InitStruct.Pin = SPI_MOSI_PIN | SPI_SCK_PIN;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
@@ -26,8 +28,16 @@ HAL_StatusTypeDef board_init_spi(void)
     HAL_GPIO_Init(SPI_SPI_PORT, &GPIO_InitStruct);
 
     memset((void*)&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
-    GPIO_InitStruct.Pin = SPI_CS_PIN;
+    GPIO_InitStruct.Pin = SPI_MISO_PIN ;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
+    HAL_GPIO_Init(SPI_SPI_PORT, &GPIO_InitStruct);
+
+    memset((void*)&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
+    GPIO_InitStruct.Pin = SPI_CS_PIN;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     HAL_GPIO_Init(SPI_CS_PORT, &GPIO_InitStruct);

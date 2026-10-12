@@ -60,11 +60,3 @@ logger_status_t fatfs_umount(void* storage){
     if(f_unmount(FF_VOLUME)!=FR_OK) return LOG_ERR_UNMOUNT;
     return LOG_OK;
 }
-const logger_backend_t fat_fs_backend = {
-    .mount = fatfs_mount,
-    .open = fatfs_open,
-    .write = fatfs_write,
-    .read = fatfs_read,
-    .sync = fatfs_sync,
-    .close = fatfs_close
-};

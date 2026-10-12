@@ -1,5 +1,7 @@
 #include "sd_card.h"
+#include <stdint.h>
 #include <string.h>
+#include "sd_cmds.h"
 
 sd_IO_t hSD_card = {0};
 static DSTATUS SD_card_status = STA_NOINIT; /* Disk Status */
@@ -24,11 +26,13 @@ static int card_send_command(uint8_t cmd, uint32_t arg) {
   command_packet[5] = (cmd == CMD0)   ? SD_CMD0_CRC
                       : (cmd == CMD8) ? SD_CMD8_CRC
                                       : SD_DUMMY_CRC;
-
+  
   hSD_card.tx_rx(command_packet, response_buffer, CMD_SIZE, TIMEOUT);
 
   if (cmd == CMD12) hSD_card.rx_byte(response_buffer, 1, TIMEOUT);
+
   do {
+
     hSD_card.rx_byte(&response, 1, TIMEOUT);
   } while (response & 0x80);
 
@@ -38,6 +42,7 @@ static int card_send_command(uint8_t cmd, uint32_t arg) {
 static DRESULT power_on() {
   uint8_t retries = 10;
   do {
+    
     hSD_card.deselect();
 
     // Send 15*8 dummy clocks to initialize the SD card
@@ -223,13 +228,17 @@ SD_card_init() {
   // Send CMD0 to reset the SD card
   response_R1 = card_send_command(CMD0, 0);
 
+  hSD_card.deselect();
+
   if (response_R1 != 0x01) goto init_done;
 
+  hSD_card.select();
   // Send CMD8 to check voltage range and SD card version
   response_R1 = card_send_command(
       CMD8, 0x1AA);  // Argument for CMD8: 0x1AA (check voltage range)
 
   hSD_card.rx_byte(response_R7_R3, sizeof(response_R7_R3), TIMEOUT);
+  hSD_card.deselect();
 
   if (response_R7_R3[2] != 0x01 || response_R7_R3[3] != 0xAA) {
     // Invalid voltage range, SD card may not be compatible
@@ -240,22 +249,30 @@ SD_card_init() {
   // Send CMD 55
 
   do {
-    (void)card_send_command(CMD55, 0);
-
+  hSD_card.select();
+    response_R1 = card_send_command(CMD55, 0);
+  hSD_card.deselect();
+  hSD_card.select();
     response_R1 =
         card_send_command(ACMD41,
                           0x40000000);  // Argument 0x40000000 to indicate
                                         // host supports SDHC/SDXC
+  hSD_card.deselect();
   } while (response_R1 != 0x00);
+  
+  hSD_card.select();
   card_send_command(CMD58, 0);  // Argument 0 dla CMD58
 
+  
   hSD_card.rx_byte(response_R7_R3, sizeof(response_R7_R3), TIMEOUT);
+  hSD_card.deselect();
+
+  // caart not ready
+  if(!(response_R7_R3[0]&0x80)) goto init_done;
 
   CardType = (response_R7_R3[0] & 0x40)
                  ? SDHC
                  : SDSC;  // Check if the CCS (Card Capacity Status) bit is set
-
-  hSD_card.deselect();
 
   SD_card_status &= ~STA_NOINIT;
 

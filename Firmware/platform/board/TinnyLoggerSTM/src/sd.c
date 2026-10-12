@@ -41,6 +41,7 @@ HAL_StatusTypeDef board_SD_init(void)
 
 HAL_StatusTypeDef board_SD_tx_rx(const uint8_t *tx_buffer, uint8_t *rx_buffer, size_t size, uint32_t timeout)
 {
+    memset((void*)rx_buffer, 0xFF, size);
     return HAL_SPI_TransmitReceive(&sd_spi_bus, (uint8_t *)tx_buffer, rx_buffer, size, timeout);
 }
 
@@ -51,6 +52,7 @@ HAL_StatusTypeDef board_SD_tx_byte(const uint8_t *tx_buffer, size_t size, uint32
 
 HAL_StatusTypeDef board_SD_rx_byte(uint8_t *rx_buffer, size_t size, uint32_t timeout)
 {
+    memset((void*)rx_buffer, 0xFF, size);
     return HAL_SPI_Receive(&sd_spi_bus, rx_buffer, size, timeout);
 }
 

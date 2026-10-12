@@ -76,10 +76,10 @@ set(include_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/platform
     ######################################################################
     ${CMAKE_CURRENT_SOURCE_DIR}/features/logger/backends/inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/features/logger/backends/inc
     ${CMAKE_CURRENT_SOURCE_DIR}/features/logger/inc
     ${CMAKE_CURRENT_SOURCE_DIR}/features/SD_card
-    #${CMAKE_CURRENT_SOURCE_DIR}/Sensors/AHT20/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Sensors/AHT20/Inc
+    
 )
 
 # Sources
@@ -87,11 +87,15 @@ set(sources_SRCS
      
     ${platform_SRCS}
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/main.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/features/logger/src/logger.c
     ${CMAKE_CURRENT_SOURCE_DIR}/features/logger/backends/src/console_fs_backend.c
     ${CMAKE_CURRENT_SOURCE_DIR}/features/logger/backends/src/fat_fs_backend.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/features/logger/src/logger.c
     ${CMAKE_CURRENT_SOURCE_DIR}/features/SD_card/sd_card.c
-    #${AHT20_SRCS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/Sensors/AHT20/Src/AHT20.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Third_party/FatFs/source/ff.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Third_party/FatFs/source/diskio.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Third_party/FatFs/source/ffsystem.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Third_party/FatFs/source/ffunicode.c
 
 )
 
