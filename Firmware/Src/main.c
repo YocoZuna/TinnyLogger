@@ -15,17 +15,73 @@
  *
  ******************************************************************************
  */
-
+#include "AHT20_typedefs.h"
+#include "error.h"
+#include "i2c.h"
+#include "Sensors/AHT20/Inc/AHT20.h"
+#include "itf_AHT20.h"
+#include "sd.h"
+#include "stm32l4xx_hal.h"
 #include "uart.h"
+#include "system.h"
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
+#include "logger.h"
+#include "fat_fs_backend.h"
+
+const logger_backend_t fat_fs_backend = {
+    .mount = fatfs_mount,
+    .open = fatfs_open,
+    .write = fatfs_write,
+    .read = fatfs_read,
+    .sync = fatfs_sync,
+    .close = fatfs_close
+};
+
+void d (uint32_t ms){HAL_Delay(ms);}
+AHT20_Status_t r(uint8_t deviceAddres,uint8_t* data,uint8_t len){
+    error_status_t e = P_i2c_rx(deviceAddres, data,len,100);
+    return AHT20_OK;
+}
+AHT20_Status_t w(uint8_t deviceAddres,uint8_t* data,uint8_t len){
+    error_status_t er = P_i2c_tx(deviceAddres, data,len,100);
+    return AHT20_OK;
+}
+
+
 int main(void)
 {
+    
+    P_init_System();
     uint8_t hello[20] = "Hello word";
-    P_uart_init();
-    P_uart_tx(hello,20,1000);
-
+    HAL_Delay(1);
+    error_status_t err = P_uart_init();
+    err = P_i2c_init();
+    uint8_t dsd[20]  ="hello rold";
+    P_uart_tx(dsd, sizeof(dsd) , 100);
+    fat_fs_storage_t storage = {0};
+    logger_t log = {
+        .backend = &fat_fs_backend,
+        .storage = &storage,
+        .use_buffering = false,
+        .logger_ready = false
+    };
+    char buffor[256];
+    logger_init(&log);
+    
+    struct AHT20 sensor;
+    AHT20_Create(&sensor,d,r,w);
+    AHT20_Init(&sensor);
     while (1)
     {
+        AHT20_ReadTempAndHum(&sensor);
+        AHT20_CalcTemp(&sensor);
+        AHT20_CalcTHumid(&sensor);
+        sprintf(buffor,"Data logger %.2f\t%.2f\n",sensor.tempC,sensor.humidPercent);
+        logger_write(&log,buffor,strlen(buffor));
+        HAL_Delay(1000);
     }
+
+
 }
