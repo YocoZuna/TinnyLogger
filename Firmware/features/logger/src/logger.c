@@ -1,4 +1,5 @@
 #include "logger.h"
+#include "ff.h"
 #include "logger_status.h"
 #include <stdarg.h>
 #include <stdbool.h>
@@ -22,7 +23,7 @@ logger_status_t logger_init(logger_t* logger)
     //TODO: Think how to encapsulate open for FATFs and where to define 
     if((logger_status = logger->backend->mount(logger->storage))!=LOG_OK) return logger_status;
     
-    if((logger_status = logger->backend->open(logger->storage, "log.txt", FA_WRITE | FA_OPEN_ALWAYS))!=LOG_OK) return logger_status;
+    if((logger_status = logger->backend->open(logger->storage, "log.txt", FA_WRITE | FA_OPEN_APPEND))!=LOG_OK) return logger_status;
    
     logger->logger_ready = true;
     return LOG_OK;
