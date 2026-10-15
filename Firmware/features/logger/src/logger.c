@@ -20,11 +20,8 @@ logger_status_t logger_init(logger_t* logger)
     logger->internal_storage.buffors_head = 0;
     memset(logger->internal_storage.buffor, '\0', LOGGER_INTERNAL_BUFFER_SIZE);
     
-    //TODO: Think how to encapsulate open for FATFs and where to define 
-    if((logger_status = logger->backend->mount(logger->storage))!=LOG_OK) return logger_status;
+    if((logger_status = logger->backend->init(logger->storage))!=LOG_OK) return logger_status;
     
-    if((logger_status = logger->backend->open(logger->storage, "log.txt", FA_WRITE | FA_OPEN_APPEND))!=LOG_OK) return logger_status;
-   
     logger->logger_ready = true;
     return LOG_OK;
 
@@ -39,9 +36,7 @@ logger_status_t logger_deinit(logger_t* logger){
     
     if(logger_flush(logger)!=LOG_OK) return LOG_ERR_SYNC;
 
-    if((logger_status = logger->backend->close(logger->storage))!=LOG_OK) return logger_status;
-
-    if((logger_status = logger->backend->unmount(logger->storage))!=LOG_OK) return logger_status;
+    if((logger_status = logger->backend->deinit(logger->storage))!=LOG_OK) return logger_status;
 
     logger->logger_ready = false;
     return LOG_OK;

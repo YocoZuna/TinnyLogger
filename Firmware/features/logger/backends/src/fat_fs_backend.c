@@ -2,27 +2,51 @@
 #include "logger.h"
 #include <stdio.h>
 #include "ff.h"
+#include "logger_status.h"
 
+
+#define MAKE_PATH(base,filename) base filename
 
 PARTITION VolToPart[FF_VOLUMES] = {
     {1, 0},   // "0:" → physical drive 0, whole drive
 };
 
-logger_status_t fatfs_mount(void* storage){
+static logger_status_t fatfs_mount(void* storage){
+
     fat_fs_storage_t* fat_storage = (fat_fs_storage_t*)storage;
     FATFS* fs = &fat_storage->fs;
     
-    if(f_mount(fs, FF_VOLUME, 1)!=FR_OK) return LOG_ERR_MOUNT;
+    if(f_mount(fs, FF_VOLUME, 1)!=FR_OK) return LOG_ERR_INIT;
     return LOG_OK;
 }
-logger_status_t fatfs_open(void* storage,const char* filename,const BYTE mode){
+static logger_status_t fatfs_open(void* storage,const char* filename,const BYTE mode){
     fat_fs_storage_t* fat_storage = (fat_fs_storage_t*)storage;
     FIL* file = &fat_storage->file;
-    char file_path[256];
-    snprintf(file_path, sizeof(file_path), "%s%s", FF_VOLUME,filename);
-    if(f_open(file, file_path, mode)!=FR_OK) return LOG_ERR_OPEN;
+
+    if(f_open(file, MAKE_PATH(FF_VOLUME, FILE_NAME), mode)!=FR_OK) return LOG_ERR_INIT;
     return LOG_OK;
 }
+static logger_status_t fatfs_close(void* storage){
+    fat_fs_storage_t* fat_storage = (fat_fs_storage_t*)storage;
+    FIL* file = &fat_storage->file;
+    if(f_close(file)!=FR_OK) return LOG_ERR_DEINIT;
+    return LOG_OK;
+}
+static logger_status_t fatfs_umount(void* storage){
+
+    if(f_unmount(FF_VOLUME)!=FR_OK) return LOG_ERR_DEINIT;
+    return LOG_OK;
+}
+
+logger_status_t fatfs_init(void*storage){
+
+    logger_status_t status;
+    if((status =  fatfs_mount(storage))!=LOG_OK) return status;
+    if((status =  fatfs_open(storage, FILE_NAME, FA_WRITE | FA_OPEN_APPEND))!=LOG_OK) return status;
+
+   return LOG_OK;
+}
+
 logger_status_t fatfs_write(void* storage,const char* buffor,const size_t len){
 
     UINT bytes_written;
@@ -49,14 +73,11 @@ logger_status_t fatfs_sync(void* storage){
     if(f_sync(file)!=FR_OK) return LOG_ERR_SYNC;
     return LOG_OK;
 }
-logger_status_t fatfs_close(void* storage){
-    fat_fs_storage_t* fat_storage = (fat_fs_storage_t*)storage;
-    FIL* file = &fat_storage->file;
-    if(f_close(file)!=FR_OK) return LOG_ERR_CLOSE;
-    return LOG_OK;
-}
-logger_status_t fatfs_umount(void* storage){
+logger_status_t fatfs_deinit(void*storage){
 
-    if(f_unmount(FF_VOLUME)!=FR_OK) return LOG_ERR_UNMOUNT;
-    return LOG_OK;
+    logger_status_t status;
+    if((status =  fatfs_close(storage))!=LOG_OK) return status;
+    if((status =  fatfs_umount(storage))!=LOG_OK) return status;
+
+   return LOG_OK;
 }

@@ -31,13 +31,12 @@
 
 typedef struct{
 
-    logger_status_t (*mount)(void* storage);
-    logger_status_t (*open)(void* storage,const char* filename,const BYTE mode);
+    logger_status_t (*init)(void* storage);
     logger_status_t (*write)(void* storage,const char* buffor,const size_t len);
     logger_status_t (*read)(void* storage,char* buffor,const size_t len);
     logger_status_t (*sync)(void* storage);
-    logger_status_t (*close)(void* storage);
-    logger_status_t (*unmount)(void* storage);
+    logger_status_t (*deinit)(void* storage);
+
 
 }logger_backend_t;
 
