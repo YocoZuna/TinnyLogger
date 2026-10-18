@@ -35,3 +35,6 @@ CMD58	    None / Zero	            R3          No      Read OCR
 #define CMD25 COMMAND_BASE+0x19
 #define CMD55 COMMAND_BASE+0x37
 #define CMD58 COMMAND_BASE+0x3A
+
+#define ACMD41_VER1 0x00000000
+#define ACMD41_VER2 0x40000000

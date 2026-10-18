@@ -5,7 +5,7 @@
 #include "sd_cmds.h"
 
 
-#define MAX_RETIRES 10
+#define MAX_RETIRES 100
 
 sd_IO_t hSD_card = {0};
 static DSTATUS SD_card_status = STA_NOINIT;
@@ -15,10 +15,12 @@ static uint8_t response_R1;
 static uint8_t response_R7_R3[4];
 static uint8_t dummy_buff[SD_SECTOR_SIZE];
 static sd_status_t status = SD_ERROR;
+static sd_cardversion_t CardVersion = VER_2;
 
 static sd_status_t card_send_command(uint8_t cmd, uint32_t arg,uint8_t* response) {
   uint8_t command_packet[CMD_SIZE];
   uint8_t response_buffer[CMD_SIZE];
+  uint8_t max_retires = MAX_RETIRES;
   command_packet[0] = cmd;
   command_packet[1] = (arg >> 24) & 0xFF;
   command_packet[2] = (arg >> 16) & 0xFF;
@@ -45,7 +47,7 @@ static sd_status_t card_send_command(uint8_t cmd, uint32_t arg,uint8_t* response
       return status;
     }
     
-  } while ((*response & 0x80));
+  } while ((*response & 0x80)&& max_retires--);
 
   return status;
 }
@@ -248,21 +250,22 @@ SD_card_init() {
   }
 
   if(card_send_command(CMD8, 0x1AA, &response_R1)!=SD_OK || response_R1!=0x01){
-    goto init_done;
+    CardVersion = VER_1;
   }
 
-  if(hSD_card.rx_byte(response_R7_R3, sizeof(response_R7_R3), TIMEOUT)!=SD_OK ||
-    response_R7_R3[2] != 0x01 || response_R7_R3[3] != 0xAA){
-      goto init_done;
-    }  
-
+  if(CardVersion==VER_2){
+    if(hSD_card.rx_byte(response_R7_R3, sizeof(response_R7_R3), TIMEOUT)!=SD_OK ||
+      response_R7_R3[2] != 0x01 || response_R7_R3[3] != 0xAA){
+        goto init_done;
+      }  
+    }
   do {
 
     if(card_send_command(CMD55, 0,&response_R1)!=SD_OK){
       goto init_done;
     }
 
-    if(card_send_command(ACMD41,0x40000000,&response_R1)!=SD_OK){  // Argument 0x40000000 to indicate host supports SDHC/SDXC
+    if(card_send_command(ACMD41,CardVersion==VER_2 ? ACMD41_VER2 : ACMD41_VER2,&response_R1)!=SD_OK){  // Argument 0x40000000 to indicate host supports SDHC/SDXC
       goto  init_done;
     }
 

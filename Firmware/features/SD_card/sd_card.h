@@ -25,6 +25,11 @@ typedef enum{
 }sd_cardtype_t;
 
 typedef enum{
+	VER_1 = 0,
+	VER_2 = 1
+}sd_cardversion_t;
+
+typedef enum{
   SD_OK       = 0x00,
   SD_ERROR    = 0x01,
   SD_BUSY     = 0x02,
