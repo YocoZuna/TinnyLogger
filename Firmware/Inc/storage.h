@@ -38,7 +38,9 @@ static inline int MMC_disk_status(){
 static inline int MMC_disk_initialize(){
     P_SD_init();
     IO_handlers_init();
-    return SD_card_init();
+    int status = SD_card_init();
+    P_SD_change_CLK_after_init();
+    return status;
 }
 
 static inline int MMC_disk_read(BYTE *buff, LBA_t sector, UINT count){

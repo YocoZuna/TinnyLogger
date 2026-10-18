@@ -14,6 +14,7 @@ HAL_StatusTypeDef board_SD_deselect();
 HAL_StatusTypeDef board_SD_select();
 
 void board_SD_delay(uint32_t delay);
+void board_SD_change_CLK_after_init();
 
 
 #endif

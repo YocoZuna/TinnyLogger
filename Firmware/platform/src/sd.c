@@ -45,4 +45,6 @@ void P_SD_delay(uint32_t delay)
   board_SD_delay(delay);
 }
 
-
+void P_SD_change_CLK_after_init(){
+  board_SD_change_CLK_after_init();
+}   

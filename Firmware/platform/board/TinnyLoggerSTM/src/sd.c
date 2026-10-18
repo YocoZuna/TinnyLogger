@@ -2,8 +2,10 @@
 #include "board_config.h"
 #include "cmsis_gcc.h"
 #include "stm32l4xx_hal.h"
+#include <stdint.h>
 #include <string.h>
 #include "stm32l432xx.h"
+#include "stm32l4xx_hal_spi.h"
 static SPI_HandleTypeDef sd_spi_bus = {0};
 
 HAL_StatusTypeDef board_SD_init(void)
@@ -80,3 +82,9 @@ void board_SD_delay(uint32_t delay)
     HAL_Delay(delay);
 }
 
+void board_SD_change_CLK_after_init(){
+    __HAL_SPI_DISABLE(&sd_spi_bus);
+    sd_spi_bus.Instance->CR1 &= ~(SPI_CR1_BR_Msk);
+    sd_spi_bus.Instance->CR1 |= SPI_BAUDRATEPRESCALER_2;
+    __HAL_SPI_ENABLE(&sd_spi_bus);
+}   
