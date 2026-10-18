@@ -3,7 +3,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <sys/types.h>
-#include "fat_fs_backend.h"
+#include "logger_status.h"
 
 /********************* CONIFG  *************************************/
 
@@ -19,10 +19,13 @@
 #define LOGGER_BACKEND_CONSOLE console
 #define LOGGER_BACKEND_FAT_FS fat
 
+#define LOGGER_JOIN_HELPER(a, b) a##b
+#define LOGGER_JOIN(a, b) LOGGER_JOIN_HELPER(a, b)
+
 #define LOGGER_REGISTER(instance_name,_backend,_use_buffering) \
-                        static _backend##_fs_storage_t s_##instance_name##_storage; \
+                        static LOGGER_JOIN(_backend, _fs_storage_t) s_##instance_name##_storage; \
                         static logger_t instance_name =  { \
-                            .backend = &(_backend##_fs_backend), \
+                            .backend = &(LOGGER_JOIN(_backend, _fs_backend)), \
                             .storage = &(s_##instance_name##_storage), \
                             .use_buffering = _use_buffering, \
                         };   

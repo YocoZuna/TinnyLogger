@@ -3,6 +3,7 @@
 #include <stddef.h>
 #include "ff.h"
 #include "logger_status.h"
+#include "logger.h"
 
 #define FF_VOLUME "0:"
 #define FILE_NAME "TinnyLogger.txt"
@@ -18,3 +19,4 @@ logger_status_t fatfs_read(void* storage,char* buffor,const size_t len);
 logger_status_t fatfs_sync(void* storage);
 logger_status_t fatfs_deinit(void* storage);
 
+extern const logger_backend_t fat_fs_backend;

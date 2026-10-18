@@ -1,8 +1,6 @@
 #include "fat_fs_backend.h"
-#include "logger.h"
 #include <stdio.h>
 #include "ff.h"
-#include "logger_status.h"
 
 
 #define MAKE_PATH(base,filename) base filename
@@ -81,3 +79,11 @@ logger_status_t fatfs_deinit(void*storage){
 
    return LOG_OK;
 }
+
+const logger_backend_t fat_fs_backend = {
+    .deinit = fatfs_deinit,
+    .init = fatfs_init,
+    .read = fatfs_read,
+    .sync  =fatfs_sync,
+    .write = fatfs_write,
+};

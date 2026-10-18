@@ -1,7 +1,6 @@
 #include "console_fs_backend.h"
-#include "logger.h"
+
 #include <stdio.h>
-#include "logger_status.h"
 #include "uart.h"
 #include "error.h"
 
@@ -46,3 +45,11 @@ logger_status_t console_deinit(void* storage){
     if(console_close(storage)!=LOG_OK) return LOG_ERR_DEINIT;
     return LOG_OK;
 }
+
+const logger_backend_t console_fs_backend = {
+    .deinit = console_deinit,
+    .init = console_init,
+    .read = console_read,
+    .sync  =console_sync,
+    .write = console_write,
+};
