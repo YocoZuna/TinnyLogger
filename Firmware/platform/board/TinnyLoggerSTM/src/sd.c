@@ -1,8 +1,9 @@
 #include "sd.h"
 #include "board_config.h"
+#include "cmsis_gcc.h"
 #include "stm32l4xx_hal.h"
 #include <string.h>
-
+#include "stm32l432xx.h"
 static SPI_HandleTypeDef sd_spi_bus = {0};
 
 HAL_StatusTypeDef board_SD_init(void)
@@ -42,18 +43,24 @@ HAL_StatusTypeDef board_SD_init(void)
 HAL_StatusTypeDef board_SD_tx_rx(const uint8_t *tx_buffer, uint8_t *rx_buffer, size_t size, uint32_t timeout)
 {
     memset((void*)rx_buffer, 0xFF, size);
+    __disable_irq();
     return HAL_SPI_TransmitReceive(&sd_spi_bus, (uint8_t *)tx_buffer, rx_buffer, size, timeout);
+    __enable_irq();
 }
 
 HAL_StatusTypeDef board_SD_tx_byte(const uint8_t *tx_buffer, size_t size, uint32_t timeout)
 {
+    __disable_irq();  
     return HAL_SPI_Transmit(&sd_spi_bus, tx_buffer, size, timeout);
+    __enable_irq();
 }
 
 HAL_StatusTypeDef board_SD_rx_byte(uint8_t *rx_buffer, size_t size, uint32_t timeout)
 {
     memset((void*)rx_buffer, 0xFF, size);
+    __disable_irq();
     return HAL_SPI_Receive(&sd_spi_bus, rx_buffer, size, timeout);
+    __enable_irq();
 }
 
 HAL_StatusTypeDef board_SD_deselect(void)
