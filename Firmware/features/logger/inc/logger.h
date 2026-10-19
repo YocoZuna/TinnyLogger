@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <sys/types.h>
 #include "logger_status.h"
-
+#include <stdint.h>
 /********************* CONIFG  *************************************/
 
 #define LOGGER_INTERNAL_BUFFER_SIZE 512
