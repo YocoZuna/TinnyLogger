@@ -1,5 +1,6 @@
 #include "uart.h"
 #include <string.h>
+
 #include "board_config.h"
 
 static UART_HandleTypeDef uart = {0};
@@ -16,16 +17,26 @@ HAL_StatusTypeDef board_init_uart()
     uart.Init.Mode = UART_MODE_TX_RX;
     uart.Init.HwFlowCtl = UART_HWCONTROL_NONE;
     uart.Init.OverSampling = UART_OVERSAMPLING_16;
-#if defined(USART_PRESC_PRESCALER)
+    uart.Init.OneBitSampling = UART_ONEBIT_SAMPLING_DISABLED;
+    uart.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+    #if defined(USART_PRESC_PRESCALER)
     uart.Init.ClockPrescaler = UART_PRESCALER_DIV1;
 #endif
     GPIO_InitTypeDef GPIO_InitStruct = {0};
-    GPIO_InitStruct.Pin = CONSOLE_TX_PIN | CONSOLE_RX_PIN;
+    GPIO_InitStruct.Pin = CONSOLE_TX_PIN;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
     HAL_GPIO_Init(CONSOLE_GPIO_PORT, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = CONSOLE_RX_PIN;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF3_USART2;
+    HAL_GPIO_Init(CONSOLE_GPIO_PORT, &GPIO_InitStruct);
+
 
     return HAL_UART_Init(&uart);
 }
