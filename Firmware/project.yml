@@ -100,17 +100,21 @@
     - +:test/**
     - -:test/support
   :source:
-    - Src/**
-    - platform/Src/**
-    - Third_party/FatFs/source
+    - +:Src/**
+    - +:platform/src/**
+    - +:features/logger/src/**
+    - +:features/logger/inc/**
+    - -:Third_party/FatFs/source/**
+    - -:features/logger/backends/src/**
+    - -:features/SD_card/**
   :include:
     - Inc/**
     - Src/** # In simple projects, this entry often duplicates :source
-    - platform/Inc/**
-    - Drivers/STM32L4xx_HAL/Inc/**
-    - Drivers/CMSIS/Include/**
-    - Drivers/CMSIS/Device/**
+    - platform/inc/**
     - Third_party/FatFs/source
+    - features/logger/backends/inc
+    - features/logger/inc
+    - features/SD_card
   :support:
     - test/support
   :libraries: []
