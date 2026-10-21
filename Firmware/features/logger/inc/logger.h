@@ -52,7 +52,7 @@ typedef struct{
 
 typedef struct{
 
-    const logger_backend_t* backend;
+    logger_backend_t* backend;
     logger_storage_t internal_storage;
     bool use_buffering;
     bool logger_ready;
