@@ -194,10 +194,21 @@ void test_logger_write_invalid_len(void){
 }
 
 
-void test_logger_write_write_failes(){
-    TEST_ASSERT(false);
+void test_logger_write_buffering_off_failes(){
+
+    char *dataToWrite = "DEADBEEF";
+    prepare_logger(false);
+    fake_write_ExpectAndReturn(s_logger.storage, dataToWrite, strlen(dataToWrite),LOG_ERR_WRITE);
+    TEST_ASSERT_EQUAL(LOG_ERR_WRITE,logger_write(&s_logger,dataToWrite,strlen(dataToWrite)));
 }
 
+void test_logger_write_buffering_on_failes(){
+
+    char dataToWrite[512] = {[0 ... 511] = 'A'};
+    prepare_logger(false);
+    fake_write_ExpectAndReturn(s_logger.storage, dataToWrite, LOGGER_INTERNAL_BUFFER_SIZE,LOG_ERR_WRITE);
+    TEST_ASSERT_EQUAL(LOG_ERR_WRITE,logger_write(&s_logger,dataToWrite,LOGGER_INTERNAL_BUFFER_SIZE));
+}
 void test_logger_write_buffering_off(void){
 
     s_logger.backend->write = mocked_write;
@@ -206,7 +217,7 @@ void test_logger_write_buffering_off(void){
     fake_sync_ExpectAndReturn(s_logger.storage,LOG_OK);
     
     TEST_ASSERT_EQUAL(LOG_OK,logger_write(&s_logger,dataToWrite,strlen(dataToWrite)));
-    TEST_ASSERT_EQUAL(strcmp(mocked_buffor,dataToWrite),false);
+    TEST_ASSERT_EQUAL_MEMORY(mocked_buffor,dataToWrite,strlen(dataToWrite));
     
 }
 
@@ -219,12 +230,42 @@ void test_logger_write_buffering_on_less_than_buff_size(void){
     prepare_logger(true);
     
     TEST_ASSERT_EQUAL(LOG_OK,logger_write(&s_logger,dataToWrite,strlen(dataToWrite)));
-    TEST_ASSERT_EQUAL(false,strcmp(dataToWrite,s_logger.internal_storage.buffor));
+   
+    TEST_ASSERT_EQUAL_MEMORY(dataToWrite,
+                         s_logger.internal_storage.buffor,
+                         strlen(dataToWrite));
     TEST_ASSERT_EQUAL(strlen(dataToWrite),s_logger.internal_storage.buffors_head);
 
 
 }
 
+void test_logger_write_buffering_on_write_concat(void){
+
+
+    s_logger.backend->write = mocked_write;
+    char *first_write = "AAAAAAAAAAAA";
+    char *second_write = "$$DEADBEEF$$";
+    
+    char dataToWrite[LOGGER_INTERNAL_BUFFER_SIZE];
+    prepare_logger(true);
+
+    memset(dataToWrite, 0, sizeof(dataToWrite));
+    memcpy(dataToWrite, first_write, strlen(first_write));
+    memcpy(dataToWrite + strlen(first_write), second_write, strlen(second_write));
+
+    TEST_ASSERT_EQUAL(LOG_OK,logger_write(&s_logger,first_write,strlen(first_write)));
+    TEST_ASSERT_EQUAL_MEMORY(first_write,
+                            s_logger.internal_storage.buffor,
+                            strlen(first_write));
+    TEST_ASSERT_EQUAL(strlen(first_write),s_logger.internal_storage.buffors_head);
+    
+    TEST_ASSERT_EQUAL(LOG_OK,logger_write(&s_logger,second_write,strlen(second_write)));
+    TEST_ASSERT_EQUAL_MEMORY(dataToWrite,
+                            s_logger.internal_storage.buffor,
+                            strlen(dataToWrite));
+    TEST_ASSERT_EQUAL(strlen(dataToWrite),s_logger.internal_storage.buffors_head);
+
+}
 
 
 void test_logger_write_buffering_on_twice_buff_size(void){
@@ -239,8 +280,8 @@ void test_logger_write_buffering_on_twice_buff_size(void){
     fake_sync_ExpectAndReturn(s_logger.storage,LOG_OK);
 
     TEST_ASSERT_EQUAL(LOG_OK,logger_write(&s_logger,dataToWrite,sizeof(dataToWrite)));
-    
-    TEST_ASSERT_EQUAL(false,strcmp(expected_buffor,s_logger.internal_storage.buffor));
+
+    TEST_ASSERT_EQUAL_MEMORY(expected_buffor,s_logger.internal_storage.buffor,LOGGER_INTERNAL_BUFFER_SIZE);
     TEST_ASSERT_EQUAL(0,s_logger.internal_storage.buffors_head);
 
 
@@ -257,8 +298,7 @@ void test_logger_write_buffering_on_more_buff_size(void){
     fake_sync_ExpectAndReturn(s_logger.storage,LOG_OK);
 
     TEST_ASSERT_EQUAL(LOG_OK,logger_write(&s_logger,dataToWrite,sizeof(dataToWrite)));
-    
-    TEST_ASSERT_EQUAL(false,strcmp(expected_buffor,s_logger.internal_storage.buffor));
+    TEST_ASSERT_EQUAL_MEMORY(expected_buffor,s_logger.internal_storage.buffor,256);
     TEST_ASSERT_EQUAL(256,s_logger.internal_storage.buffors_head);
 
 
